@@ -276,6 +276,39 @@ inline DWORD GetCurrentThreadId()
 // timing
 inline void Sleep(DWORD ms) { usleep((useconds_t)ms * 1000); }
 
+typedef struct _SYSTEMTIME
+{
+	WORD wYear;
+	WORD wMonth;
+	WORD wDayOfWeek;
+	WORD wDay;
+	WORD wHour;
+	WORD wMinute;
+	WORD wSecond;
+	WORD wMilliseconds;
+} SYSTEMTIME, *LPSYSTEMTIME;
+
+inline void xr_fill_systemtime(SYSTEMTIME* st, bool local)
+{
+	timespec ts;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	time_t secs = ts.tv_sec;
+	tm t;
+	if (local) localtime_r(&secs, &t);
+	else gmtime_r(&secs, &t);
+	st->wYear = WORD(t.tm_year + 1900);
+	st->wMonth = WORD(t.tm_mon + 1);
+	st->wDayOfWeek = WORD(t.tm_wday);
+	st->wDay = WORD(t.tm_mday);
+	st->wHour = WORD(t.tm_hour);
+	st->wMinute = WORD(t.tm_min);
+	st->wSecond = WORD(t.tm_sec);
+	st->wMilliseconds = WORD(ts.tv_nsec / 1000000);
+}
+
+inline void GetLocalTime(LPSYSTEMTIME st) { xr_fill_systemtime(st, true); }
+inline void GetSystemTime(LPSYSTEMTIME st) { xr_fill_systemtime(st, false); }
+
 inline DWORD GetTickCount()
 {
 	timespec ts;

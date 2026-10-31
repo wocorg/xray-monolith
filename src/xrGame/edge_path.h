@@ -39,7 +39,7 @@ struct CEdgePath
 		typedef typename CVertexPath<
 			bEuclidianHeuristics
 		>::template CDataStorage<
-			DataStorageEdgePath<_vertex>::_vertex
+			DataStorageEdgePath<_vertex>::template _vertex
 		> inherited;
 		typedef typename inherited::CGraphVertex CGraphVertex;
 		typedef typename CGraphVertex::_index_type _index_type;

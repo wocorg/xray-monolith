@@ -79,7 +79,7 @@ namespace ALife
 		eMeetActionTypeDummy = u32(-1),
 	};
 
-	enum ERelationType
+	enum ERelationType XR_FWD_ENUM_U32
 	{
 		eRelationTypeFriend = u32(0),
 		eRelationTypeNeutral,

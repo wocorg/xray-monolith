@@ -47,11 +47,11 @@ enum EPdaMsg XR_FWD_ENUM_INT;
 enum ESoundTypes XR_FWD_ENUM_INT;
 enum ETaskState XR_FWD_ENUM_INT;
 
-namespace ALife { enum ERelationType; }
-namespace ScriptEntity { enum EActionType; }
-namespace MovementManager { enum EPathType; }
-namespace DetailPathManager { enum EDetailPathType; }
-namespace SightManager { enum ESightType; }
+namespace ALife { enum ERelationType XR_FWD_ENUM_U32; }
+namespace ScriptEntity { enum EActionType XR_FWD_ENUM_INT; }
+namespace MovementManager { enum EPathType XR_FWD_ENUM_U32; }
+namespace DetailPathManager { enum EDetailPathType XR_FWD_ENUM_INT; }
+namespace SightManager { enum ESightType XR_FWD_ENUM_U32; }
 namespace smart_cover { class object; }
 namespace doors { class door; }
 

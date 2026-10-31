@@ -10,7 +10,7 @@
 
 namespace ScriptEntity
 {
-	enum EActionType
+	enum EActionType XR_FWD_ENUM_INT
 	{
 		eActionTypeMovement = u32(0),
 		eActionTypeWatch,

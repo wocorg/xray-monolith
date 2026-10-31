@@ -15,6 +15,7 @@ class CPropertyEvaluatorConst : public CPropertyEvaluator<_object_type>
 {
 protected:
 	typedef CPropertyEvaluator<_object_type> inherited;
+	typedef typename inherited::_value_type _value_type;
 
 protected:
 	_value_type m_value;

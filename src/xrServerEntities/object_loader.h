@@ -35,7 +35,7 @@ struct CLoader
 		template <bool pointer>
 		IC static void load_data(T& data, M& stream, const P& p)
 		{
-			CHelper1<T>::load_data <
+			CHelper1<T>::template load_data <
 				object_type_traits::is_base_and_derived_or_same_from_template<
 					IPureLoadableObject,
 					T
@@ -118,7 +118,7 @@ struct CLoader
 		template <bool a>
 		IC static void load_data(T& data, M& stream, const P& p)
 		{
-			CHelper<T>::load_data < object_type_traits::is_pointer<T>::value > (data, stream, p);
+			CHelper<T>::template load_data < object_type_traits::is_pointer<T>::value > (data, stream, p);
 		}
 
 		template <>
