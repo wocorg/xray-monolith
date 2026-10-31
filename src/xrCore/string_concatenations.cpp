@@ -58,6 +58,10 @@ namespace xray
 				}
 			} // namespace strconcat_error
 
+#ifndef _WIN32
+			// no SEH on POSIX; stack size for concatenations is bounded by the callers
+			void check_stack_overflow(u32 /*stack_increment*/) {}
+#else
 			int stack_overflow_exception_filter(int exception_code)
 			{
 				if (exception_code == EXCEPTION_STACK_OVERFLOW)
@@ -84,6 +88,7 @@ namespace xray
 					_resetstkoflw();
 				}
 			}
+#endif
 
 			void string_tupples::error_process() const
 			{

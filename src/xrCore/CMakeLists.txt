@@ -54,6 +54,7 @@ set(XRCORE_SOURCES
 	_math.cpp
 	_sphere.cpp
 	_std_extensions.cpp
+	xrCore_platform_posix.cpp
 )
 # Not built on macOS: blackbox/* (Win32 crash handler), FileSystem_borland.cpp,
 # xrMemory_subst_borland.cpp, xrDebug.cpp and LocatorAPI_Notifications.cpp
@@ -66,6 +67,9 @@ target_include_directories(xrCore PUBLIC
 	"${XRAY_SRC_DIR}/3rd party"
 	${XRAY_SDK_DIR}/include
 )
+# Stand-ins for Windows-only headers (io.h, direct.h, malloc.h...)
+target_include_directories(xrCore SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/posix_include)
+
 # xrCore has headers named like system ones (_types.h, log.h, vector.h...),
 # so expose its directory to "" includes only, never to <> includes.
 target_compile_options(xrCore PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")

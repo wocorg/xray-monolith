@@ -26,6 +26,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		-Wno-microsoft
 		-Wno-ignored-attributes
 		-Wno-c++11-narrowing
+		# old C code (lzo) uses the 'register' keyword
+		-Wno-register
 	)
 endif()
 

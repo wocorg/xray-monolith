@@ -2,7 +2,11 @@
 #pragma hdrstop
 
 #include "cpuid.h"
+#ifdef _MSC_VER
 #include <intrin.h>
+#else
+#include <sys/sysctl.h>
+#endif
 
 #include <array>
 #include <bitset>
@@ -28,6 +32,30 @@ int _cpuid ( _processor_info *pinfo )
 
     pinfo->feature = _CPU_FEATURE_MMX | _CPU_FEATURE_SSE;
     return pinfo->feature;
+}
+#elif !defined(_MSC_VER)
+// macOS: no x86 feature bits; names and core counts come from sysctl
+int _cpuid(_processor_info* pinfo)
+{
+	memset(pinfo, 0, sizeof(_processor_info));
+
+	size_t len = sizeof(pinfo->model_name) - 1;
+	if (sysctlbyname("machdep.cpu.brand_string", pinfo->model_name, &len, nullptr, 0) != 0)
+		strcpy_s(pinfo->model_name, "Unknown CPU");
+	strcpy_s(pinfo->v_name, "Apple");
+
+	int value = 0;
+	size_t value_len = sizeof(value);
+	if (sysctlbyname("hw.physicalcpu", &value, &value_len, nullptr, 0) == 0)
+		pinfo->n_cores = value;
+	value_len = sizeof(value);
+	if (sysctlbyname("hw.logicalcpu", &value, &value_len, nullptr, 0) == 0)
+		pinfo->n_threads = value;
+
+	if (pinfo->n_threads != pinfo->n_cores)
+		pinfo->feature |= _CPU_FEATURE_HTT;
+	pinfo->affinity_mask = pinfo->n_threads >= 32 ? 0xFFFFFFFFu : (1u << pinfo->n_threads) - 1;
+	return pinfo->feature;
 }
 #else
 

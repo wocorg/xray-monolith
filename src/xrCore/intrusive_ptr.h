@@ -183,7 +183,9 @@ TEMPLATE_SPECIALIZATION
 class intrusive_ptr
 {
 public:
+#ifdef _MSC_VER
     typedef object_type object_type;
+#endif
     typedef _intrusive_ptr self_type;
 
 private:

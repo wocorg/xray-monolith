@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _WIN32
 #include <process.h>
 
 // mmsystem.h
@@ -10,6 +11,9 @@
 #define MMNOMIXER
 #define MMNOJOY
 #include <mmsystem.h>
+#else
+#include <pthread.h>
+#endif
 
 #include "profiler.h"
 
@@ -61,6 +65,24 @@ namespace FPU
 
 	void initialize()
 	{
+	}
+};
+#elif !defined(_MSC_VER)
+// ARM has no x87 precision/rounding modes to switch; SSE-style FTZ is set per thread
+u16 getFPUsw() { return 0; }
+
+namespace FPU
+{
+	XRCORE_API void m24() {}
+	XRCORE_API void m24r() {}
+	XRCORE_API void m53() {}
+	XRCORE_API void m53r() {}
+	XRCORE_API void m64() {}
+	XRCORE_API void m64r() {}
+
+	void initialize()
+	{
+		::Random.seed(u32(CPU::GetCLK() & 0xFFFFFFFFull));
 	}
 };
 #else
@@ -239,8 +261,10 @@ void Detect()
 	a = 1000000.0;
 	clk_to_microsec = float(a / b);
 
+#ifdef _WIN32
 	// Ensure the OS timer resolution is set to 1ms globally for the engine
 	timeBeginPeriod(1);
+#endif
 }
 };
 
@@ -298,6 +322,20 @@ void _initialize_cpu(void)
 void _initialize_cpu_thread()
 {
 }
+#elif !defined(_MSC_VER)
+void debug_on_thread_spawn();
+
+void _initialize_cpu_thread()
+{
+	debug_on_thread_spawn();
+#if defined(__aarch64__)
+	// flush denormals to zero, like the SSE FTZ/DAZ setup on x86
+	u64 fpcr;
+	asm volatile("mrs %0, fpcr" : "=r"(fpcr));
+	fpcr |= (1ull << 24); // FZ
+	asm volatile("msr fpcr, %0" : : "r"(fpcr));
+#endif
+}
 #else
 // per-thread initialization
 #include <xmmintrin.h>
@@ -346,6 +384,12 @@ struct THREAD_NAME
 	DWORD dwFlags;
 };
 
+#ifndef _WIN32
+void thread_name(const char* name)
+{
+	pthread_setname_np(name);
+}
+#else
 void thread_name(const char* name)
 {
 	THREAD_NAME tn;
@@ -361,6 +405,7 @@ void thread_name(const char* name)
 	{
 	}
 }
+#endif
 #pragma pack(pop)
 
 struct THREAD_STARTUP
@@ -397,7 +442,18 @@ void thread_spawn(thread_t* entry, const char* name, unsigned stack, void* argli
 	startup->entry = entry;
 	startup->name = (char*)name;
 	startup->args = arglist;
+#ifdef _WIN32
 	_beginthread(thread_entry, stack, startup);
+#else
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	if (stack)
+		pthread_attr_setstacksize(&attr, stack);
+	pthread_t thread;
+	pthread_create(&thread, &attr, [](void* p) -> void* { thread_entry(p); return nullptr; }, startup);
+	pthread_attr_destroy(&attr);
+#endif
 }
 
 //void spline1(float t, Fvector* p, Fvector* ret)

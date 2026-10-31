@@ -51,6 +51,20 @@ IC u64 GetCLK(void)
 #ifdef M_BORLAND
 XRCORE_API u64 __fastcall GetCLK (void);
 #endif
+
+#if !defined(M_VISUAL) && !defined(M_BORLAND)
+	// cycle-like counter; its rate is calibrated in CPU::Detect()
+	IC u64 GetCLK(void)
+	{
+#if defined(__aarch64__)
+		u64 v;
+		asm volatile("mrs %0, cntvct_el0" : "=r"(v));
+		return v;
+#else
+		return __builtin_readcyclecounter();
+#endif
+	}
+#endif
 };
 
 extern XRCORE_API void _initialize_cpu();

@@ -117,7 +117,9 @@ inline char* _strupr(char* s)
 #define strupr _strupr
 
 // secure CRT functions; return 0 on success like MSVC
+#ifndef _ERRNO_T
 typedef int errno_t;
+#endif
 
 inline int strncpy_s(char* dst, size_t size, const char* src, size_t count)
 {
@@ -202,6 +204,95 @@ inline BOOL QueryPerformanceCounter(LARGE_INTEGER* c)
 	c->QuadPart = (LONGLONG)clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
 	return TRUE;
 }
+
+typedef char* PSTR;
+typedef LARGE_INTEGER* PLARGE_INTEGER;
+
+#define CopyMemory(dst, src, size) memcpy((dst), (src), (size))
+#define MoveMemory(dst, src, size) memmove((dst), (src), (size))
+#define FillMemory(dst, size, value) memset((dst), (value), (size))
+#define ZeroMemory(dst, size) memset((dst), 0, (size))
+
+// --- implemented in xrCore_platform_posix.cpp ---
+#include <string>
+std::string xr_posix_path(const char* path); // backslashes -> slashes
+void xr_posix_set_command_line(int argc, char** argv);
+
+LPSTR GetCommandLine();
+DWORD GetLastError();
+void SetLastError(DWORD e);
+
+#define INVALID_HANDLE_VALUE ((HANDLE)(intptr_t)-1)
+#define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF)
+#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#define GENERIC_READ 0x80000000u
+#define GENERIC_WRITE 0x40000000u
+#define FILE_SHARE_READ 0x1
+#define FILE_SHARE_WRITE 0x2
+#define FILE_SHARE_DELETE 0x4
+#define CREATE_NEW 1
+#define CREATE_ALWAYS 2
+#define OPEN_EXISTING 3
+#define OPEN_ALWAYS 4
+#define TRUNCATE_EXISTING 5
+#define FILE_ATTRIBUTE_READONLY 0x1
+#define FILE_ATTRIBUTE_HIDDEN 0x2
+#define FILE_ATTRIBUTE_DIRECTORY 0x10
+#define FILE_ATTRIBUTE_NORMAL 0x80
+#define FILE_FLAG_NO_BUFFERING 0x20000000
+#define FILE_FLAG_SEQUENTIAL_SCAN 0x08000000
+#define PAGE_READONLY 0x02
+#define PAGE_READWRITE 0x04
+#define FILE_MAP_WRITE 0x2
+#define FILE_MAP_READ 0x4
+#define FILE_MAP_ALL_ACCESS 0xF001F
+
+HANDLE CreateFile(LPCSTR name, DWORD access, DWORD share, void* security, DWORD disposition, DWORD flags,
+	HANDLE template_file);
+DWORD GetFileSize(HANDLE h, LPDWORD high);
+BOOL CloseHandle(HANDLE h);
+HANDLE CreateFileMapping(HANDLE file, void* security, DWORD protect, DWORD size_high, DWORD size_low, LPCSTR name);
+LPVOID MapViewOfFile(HANDLE mapping, DWORD access, DWORD offset_high, DWORD offset_low, SIZE_T size);
+BOOL UnmapViewOfFile(LPCVOID ptr);
+DWORD GetFileAttributes(LPCSTR name);
+BOOL SetFileAttributes(LPCSTR name, DWORD attr);
+
+struct SYSTEM_INFO
+{
+	DWORD dwPageSize;
+	DWORD dwAllocationGranularity;
+	DWORD dwNumberOfProcessors;
+};
+void GetSystemInfo(SYSTEM_INFO* info);
+
+HMODULE GetModuleHandle(LPCSTR name);
+DWORD GetModuleFileName(HMODULE module, LPSTR buffer, DWORD size);
+DWORD GetCurrentDirectory(DWORD size, LPSTR buffer);
+BOOL SetCurrentDirectory(LPCSTR path);
+BOOL GetUserName(LPSTR buffer, LPDWORD size);
+BOOL GetComputerName(LPSTR buffer, LPDWORD size);
+
+errno_t _splitpath_s(const char* path, char* drive, size_t drive_size, char* dir, size_t dir_size, char* fname,
+	size_t fname_size, char* ext, size_t ext_size);
+void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
+char* _strdate(char* buffer);
+char* _strtime(char* buffer);
+#define _tzset tzset
+char* _itoa(int value, char* buffer, int radix);
+#define itoa _itoa
+#define _getcwd getcwd
+
+void* _aligned_malloc(size_t size, size_t alignment);
+void* _aligned_realloc(void* ptr, size_t size, size_t alignment);
+void _aligned_free(void* ptr);
+size_t _aligned_msize(void* ptr, size_t alignment, size_t offset);
+
+typedef pthread_mutex_t CRITICAL_SECTION;
+void InitializeCriticalSection(CRITICAL_SECTION* cs);
+void DeleteCriticalSection(CRITICAL_SECTION* cs);
+void EnterCriticalSection(CRITICAL_SECTION* cs);
+void LeaveCriticalSection(CRITICAL_SECTION* cs);
+BOOL TryEnterCriticalSection(CRITICAL_SECTION* cs);
 
 // slim reader/writer lock
 typedef pthread_rwlock_t SRWLOCK;

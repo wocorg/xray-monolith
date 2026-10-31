@@ -5,8 +5,60 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
+#include <fcntl.h>
 #include <sys/stat.h>
+#include <utime.h>
+#include <cstring>
 #include <string>
+
+// open flags; POSIX has no text/binary distinction
+#define O_BINARY 0
+#define O_SEQUENTIAL 0
+#define _O_BINARY 0
+#define _O_RDONLY O_RDONLY
+#define _O_WRONLY O_WRONLY
+#define _O_RDWR O_RDWR
+#define _O_CREAT O_CREAT
+#define _O_TRUNC O_TRUNC
+#define _O_APPEND O_APPEND
+#define _SH_DENYNO 0x40
+#define _SH_DENYWR 0x20
+#define SH_DENYNO _SH_DENYNO
+#define SH_DENYWR _SH_DENYWR
+#define _S_IREAD S_IRUSR
+#define _S_IWRITE S_IWUSR
+
+int _open(const char* name, int flags, ...);
+int _sopen(const char* name, int flags, int share, ...);
+errno_t _sopen_s(int* handle, const char* name, int flags, int share, int mode);
+long _filelength(int fd);
+#define filelength _filelength
+#define _read read
+#define _write write
+#define _close close
+#define _lseek lseek
+#define _tell(fd) lseek((fd), 0, SEEK_CUR)
+#define _fdopen fdopen
+int _mkdir(const char* path);
+
+// macOS defines st_atime/st_mtime/st_ctime as macros over these timespec fields
+struct _stat
+{
+	mode_t st_mode;
+	off_t st_size;
+	struct timespec st_atimespec;
+	struct timespec st_mtimespec;
+	struct timespec st_ctimespec;
+};
+int _stat(const char* path, struct _stat* st);
+int _utime(const char* path, struct utimbuf* times);
+
+// MSVC exposes strerror texts as an array
+struct xr_sys_errlist_t
+{
+	const char* operator[](int e) const { return strerror(e); }
+};
+static const xr_sys_errlist_t _sys_errlist = {};
 
 #define _A_NORMAL 0x00
 #define _A_RDONLY 0x01

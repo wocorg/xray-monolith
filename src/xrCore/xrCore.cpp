@@ -3,8 +3,10 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _WIN32
 #include <mmsystem.h>
 #include <objbase.h>
+#endif
 #include "xrCore.h"
 
 #pragma comment(lib,"winmm.lib")
@@ -54,8 +56,10 @@ void xrCore::_initialize(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, 
 		// HRESULT co_res =
 		Params = xr_strdup(GetCommandLine());
 		xr_strlwr(Params);
+#ifdef _WIN32
 		if (!strstr(Params, "-editor"))
 			CoInitializeEx(NULL, COINIT_MULTITHREADED);
+#endif
 
 		string_path fn, dr, di;
 
@@ -204,7 +208,7 @@ void xrCore::_destroy()
 	}
 }
 
-#ifndef XRCORE_STATIC
+#if !defined(XRCORE_STATIC) && defined(_WIN32)
 
 //. why ???
 #ifdef _EDITOR
