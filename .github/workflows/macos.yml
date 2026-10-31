@@ -35,9 +35,32 @@ jobs:
           grep -oE '^[^ ]+\.(cpp|h|c):[0-9]+:[0-9]+: (fatal )?error' build.log | cut -d: -f1 | sort | uniq -c | sort -rn | head -50 | sed 's/^/    /' >> "$GITHUB_STEP_SUMMARY" || true
           echo "Total errors: $(grep -cE ': (fatal )?error:' build.log)" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Compact error report
+        if: always()
+        shell: bash
+        run: |
+          # small report so the error list can be fetched without the full log
+          {
+            echo "total errors: $(grep -cE ': (fatal )?error:' build.log)"
+            echo "--- failed objects per target"
+            grep -oE '^FAILED: .*CMakeFiles/[^/]+\.dir' build.log | sed -E 's#.*CMakeFiles/([^/]+)\.dir#\1#' | sort | uniq -c | sort -rn
+            echo "--- distinct errors (count, location, message)"
+            grep -E '^[^ ]+:[0-9]+:[0-9]+: (fatal )?error: ' build.log \
+              | sed -E "s#^$GITHUB_WORKSPACE/##; s#^([^:]+):([0-9]+):[0-9]+: (fatal )?error: #\1:\2 #" \
+              | sort | uniq -c | sort -rn
+          } > errors.txt || true
+          gzip -k build.log
+
+      - name: Upload error report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: errors
+          path: errors.txt
+
       - name: Upload build log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-log
-          path: build.log
+          path: build.log.gz

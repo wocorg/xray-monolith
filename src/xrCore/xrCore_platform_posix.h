@@ -4,6 +4,12 @@
 #define XRCORE_PLATFORM_POSIX_H
 #pragma once
 
+// Code tells MSVC-only paths apart with _MSC_VER; clang's MS-compatibility mode must
+// not define it here (see -fms-compatibility-version=0 in CMakeLists.txt)
+#ifdef _MSC_VER
+#error "_MSC_VER is defined in a non-Windows build: Windows-only code paths would be compiled"
+#endif
+
 #include <cstdint>
 #include <cstddef>
 #include <cstdio>
@@ -41,6 +47,14 @@ typedef intptr_t LONG_PTR;
 typedef uintptr_t ULONG_PTR;
 typedef uintptr_t DWORD_PTR;
 
+typedef unsigned short USHORT;
+typedef USHORT* PUSHORT;
+typedef DWORD* PDWORD;
+typedef WORD* PWORD;
+typedef WORD* LPWORD;
+typedef BYTE* PBYTE;
+typedef LONG* PLONG;
+
 typedef void* PVOID;
 typedef void* LPVOID;
 typedef const void* LPCVOID;
@@ -66,6 +80,11 @@ typedef UINT_PTR WPARAM;
 typedef LONG_PTR LPARAM;
 typedef LONG_PTR LRESULT;
 typedef LONG HRESULT;
+
+#define RGB(r, g, b) ((DWORD)(((BYTE)(r) | ((WORD)((BYTE)(g)) << 8)) | (((DWORD)(BYTE)(b)) << 16)))
+#define GetRValue(rgb) ((BYTE)(rgb))
+#define GetGValue(rgb) ((BYTE)(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb) ((BYTE)((rgb) >> 16))
 
 #define S_OK ((HRESULT)0)
 #define S_FALSE ((HRESULT)1)

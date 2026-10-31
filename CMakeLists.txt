@@ -33,6 +33,12 @@ endif()
 
 add_compile_definitions(NDEBUG PURE_ALLOC)
 
+# Game and engine code lean on MSVC-only leniencies (redeclaring template parameters
+# as member typedefs, enums forward-declared without a type, lookup into dependent
+# bases). Clang accepts these as extensions in MS-compatibility mode. Version 0 keeps
+# _MSC_VER undefined, so code still takes its non-Windows paths.
+set(XRAY_MSVC_COMPAT_FLAGS -fms-compatibility -fms-compatibility-version=0 -Wno-microsoft)
+
 # sse2neon: the engine uses x86 SSE intrinsics directly; on arm64 the stand-in
 # <xmmintrin.h> etc. in src/xrCore/posix_include map them to NEON
 include(FetchContent)

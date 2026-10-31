@@ -1251,4 +1251,5 @@ target_include_directories(xrGame PRIVATE
 	"${XRAY_SRC_DIR}/3rd party/CxImage"
 )
 target_compile_definitions(xrGame PRIVATE XRGAME_EXPORTS)
+target_compile_options(xrGame PRIVATE ${XRAY_MSVC_COMPAT_FLAGS})
 target_link_libraries(xrGame PUBLIC xrEngine xrCore xrCDB xrAPI xrNetServer xrPhysics xrXMLParser luabind ode)
