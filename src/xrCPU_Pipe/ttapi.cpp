@@ -1,6 +1,15 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _WIN32
+#define TTAPI_LOAD(x) (x)
+#else
+#include <thread>
+// ARM orders memory more weakly than x86: the spin-waits below must read with acquire
+// semantics so the worker parameters / job results written before the flag are visible
+#define TTAPI_LOAD(x) __atomic_load_n(&(x), __ATOMIC_ACQUIRE)
+#endif
+
 typedef struct TTAPI_WORKER_PARAMS
 {
 	volatile LONG vlFlag;
@@ -11,7 +20,11 @@ typedef struct TTAPI_WORKER_PARAMS
 
 typedef PTTAPI_WORKER_PARAMS LPTTAPI_WORKER_PARAMS;
 
+#ifdef _WIN32
 static LPHANDLE ttapi_threads_handles = NULL;
+#else
+static std::thread* ttapi_threads_handles = NULL;
+#endif
 static BOOL ttapi_initialized = FALSE;
 static DWORD ttapi_workers_count = 0;
 static DWORD ttapi_threads_count = 0;
@@ -39,7 +52,7 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 		// Fast
 		for (i = 0; i < dwFastIter; ++i)
 		{
-			if (pParams->vlFlag == 0)
+			if (TTAPI_LOAD(pParams->vlFlag) == 0)
 			{
 				// Msg( "0x%8.8X Fast %u" , dwId , i );
 				goto process;
@@ -50,7 +63,7 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 		// Moderate
 		for (i = 0; i < dwSlowIter; ++i)
 		{
-			if (pParams->vlFlag == 0)
+			if (TTAPI_LOAD(pParams->vlFlag) == 0)
 			{
 				// Msg( "0x%8.8X Moderate %u" , dwId , i );
 				goto process;
@@ -59,7 +72,7 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 		}
 
 		// Slow
-		while (pParams->vlFlag)
+		while (TTAPI_LOAD(pParams->vlFlag))
 		{
 			Sleep(100);
 			//Msg( "Shit" );
@@ -88,6 +101,7 @@ typedef struct tagTHREADNAME_INFO
 	DWORD dwFlags;
 } THREADNAME_INFO;
 
+#ifdef _WIN32
 void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 {
 	THREADNAME_INFO info;
@@ -105,6 +119,7 @@ void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 	{
 	}
 }
+#endif
 
 DWORD ttapi_Init(_processor_info* ID)
 {
@@ -138,8 +153,12 @@ DWORD ttapi_Init(_processor_info* ID)
 	// Helper threads count
 	ttapi_threads_count = ttapi_workers_count - 1;
 
+#ifdef _WIN32
 	if ((ttapi_threads_handles = (LPHANDLE)malloc(sizeof(HANDLE) * ttapi_threads_count)) == NULL)
 		return 0;
+#else
+	ttapi_threads_handles = new std::thread[ttapi_threads_count];
+#endif
 	if ((ttapi_worker_params = (PTTAPI_WORKER_PARAMS)malloc(sizeof(TTAPI_WORKER_PARAMS) * ttapi_workers_count)) == NULL)
 		return 0;
 
@@ -155,6 +174,9 @@ DWORD ttapi_Init(_processor_info* ID)
 	{
 		ttapi_worker_params[i].vlFlag = 1;
 
+#ifndef _WIN32
+		ttapi_threads_handles[i] = std::thread(ttapiThreadProc, &ttapi_worker_params[i]);
+#else
 		// Create the thread using standard WinAPI (compatible with existing handles array)
 		ttapi_threads_handles[i] = CreateThread(
 			NULL,
@@ -167,6 +189,7 @@ DWORD ttapi_Init(_processor_info* ID)
 
 		if (ttapi_threads_handles[i] == NULL)
 			return 0;
+#endif
 
 		// Modern Thread Naming (Windows 10 Build 1607+)
 		// Falls back gracefully on older windows if not available, 
@@ -214,7 +237,7 @@ VOID ttapi_RunAllWorkers()
 
 		// Waiting task queue to become empty
 		//Start = __rdtsc();
-		while (ttapi_queue_size.size)
+		while (TTAPI_LOAD(ttapi_queue_size.size))
 			_mm_pause();
 		//Stop = __rdtsc();
 		//Msg( "Wait: %u ticks" , Stop - Start );
@@ -241,10 +264,16 @@ VOID ttapi_Done()
 	}
 
 	// Waiting threads for completion
+#ifdef _WIN32
 	WaitForMultipleObjects(ttapi_threads_count, ttapi_threads_handles, TRUE, INFINITE);
 
 	// Freeing resources
 	free(ttapi_threads_handles);
+#else
+	for (DWORD i = 0; i < ttapi_threads_count; i++)
+		ttapi_threads_handles[i].join();
+	delete[] ttapi_threads_handles;
+#endif
 	ttapi_threads_handles = NULL;
 	free(ttapi_worker_params);
 	ttapi_worker_params = NULL;

@@ -241,6 +241,12 @@ inline int sprintf_s(char (&dst)[N], const char* fmt, ...)
 }
 
 // threads
+inline BOOL SwitchToThread()
+{
+	sched_yield();
+	return TRUE;
+}
+
 inline DWORD GetCurrentThreadId()
 {
 	uint64_t id = 0;
@@ -406,5 +412,13 @@ inline LONG InterlockedCompareExchange(volatile LONG* v, LONG x, LONG cmp)
 	__atomic_compare_exchange_n(v, &cmp, x, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 	return cmp;
 }
+
+#define _InterlockedIncrement InterlockedIncrement
+#define _InterlockedDecrement InterlockedDecrement
+#define _InterlockedExchange InterlockedExchange
+#define _InterlockedCompareExchange InterlockedCompareExchange
+
+#define INFINITE 0xFFFFFFFF
+#define sscanf_s sscanf
 
 #endif // XRCORE_PLATFORM_POSIX_H
