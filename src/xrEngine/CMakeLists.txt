@@ -115,8 +115,10 @@ set_source_files_properties(${XRENGINE_DISCORD_SOURCES} PROPERTIES HEADER_FILE_O
 # Win32-only parts, not built on macOS. TODO(macos-port): replace with SDL in the
 # window/input stage: DirectInput/XInput input, window creation and message handling,
 # the dedicated-server text console, monitor enumeration, keyboard layouts for ImGui,
-# AVI playback.
+# AVI playback, the WinMain entry point and message loop (x_ray.cpp, device.cpp), and
+# renderer DLL loading (EngineAPI.cpp; the renderer is a later stage of the port).
 set_source_files_properties(
+	x_ray.cpp device.cpp EngineAPI.cpp
 	Xr_input.cpp xr_input_xinput.cpp
 	Device_create.cpp Device_destroy.cpp Device_Initialize.cpp Device_wndproc.cpp
 	Text_Console.cpp Text_Console_WndProc.cpp

@@ -953,14 +953,14 @@ void CWeaponMagazinedWGrenade::PlayAnimShoot()
 
 void CWeaponMagazinedWGrenade::PlayAnimModeSwitch()
 {
-	if (m_bGrenadeMode)
-		iAmmoElapsed == 0 && HudAnimationExist("anm_switch_g_empty")
-		? PlayHUDMotion("anm_switch_g_empty", TRUE, this, eSwitch)
-		: HudAnimationExist("anm_switch_g") ? PlayHUDMotion("anm_switch_g", TRUE, this, eSwitch) : SwitchState(eSwitch);
+	LPCSTR empty_anim = m_bGrenadeMode ? "anm_switch_g_empty" : "anm_switch_empty";
+	LPCSTR anim = m_bGrenadeMode ? "anm_switch_g" : "anm_switch";
+	if (iAmmoElapsed == 0 && HudAnimationExist(empty_anim))
+		PlayHUDMotion(empty_anim, TRUE, this, eSwitch);
+	else if (HudAnimationExist(anim))
+		PlayHUDMotion(anim, TRUE, this, eSwitch);
 	else
-		iAmmoElapsed == 0 && HudAnimationExist("anm_switch_empty")
-		? PlayHUDMotion("anm_switch_empty", TRUE, this, eSwitch)
-		: HudAnimationExist("anm_switch") ? PlayHUDMotion("anm_switch", TRUE, this, eSwitch) : SwitchState(eSwitch);
+		SwitchState(eSwitch);
 }
 
 bool CWeaponMagazinedWGrenade::TryPlayAnimBore()

@@ -463,6 +463,93 @@ void EnterCriticalSection(CRITICAL_SECTION* cs);
 void LeaveCriticalSection(CRITICAL_SECTION* cs);
 BOOL TryEnterCriticalSection(CRITICAL_SECTION* cs);
 
+// events (implemented in xrCore_platform_posix.cpp on pthreads)
+#define WAIT_OBJECT_0 0x00000000L
+#define WAIT_ABANDONED 0x00000080L
+#define WAIT_TIMEOUT 0x00000102L
+#define WAIT_FAILED ((DWORD)0xFFFFFFFF)
+typedef struct _SECURITY_ATTRIBUTES* LPSECURITY_ATTRIBUTES;
+HANDLE CreateEvent(LPSECURITY_ATTRIBUTES attributes, BOOL manual_reset, BOOL initial_state, LPCSTR name);
+BOOL SetEvent(HANDLE event);
+BOOL ResetEvent(HANDLE event);
+DWORD WaitForSingleObject(HANDLE handle, DWORD milliseconds);
+
+// processes and modules
+inline HANDLE GetCurrentProcess() { return (HANDLE)(intptr_t)-1; }
+inline DWORD GetCurrentProcessId() { return (DWORD)getpid(); }
+HMODULE LoadLibrary(LPCSTR name);
+#define LoadLibraryA LoadLibrary
+void* GetProcAddress(HMODULE module, LPCSTR name);
+BOOL FreeLibrary(HMODULE module);
+DWORD GetFullPathName(LPCSTR name, DWORD size, LPSTR buffer, LPSTR* file_part);
+
+// structured exception handling does not exist here: __try bodies run as plain
+// blocks and __except handlers never run
+#define __try if (true)
+#define __except(filter) else if (false)
+#define GetExceptionCode() 0
+#define EXCEPTION_EXECUTE_HANDLER 1
+#define EXCEPTION_CONTINUE_SEARCH 0
+#define EXCEPTION_CONTINUE_EXECUTION (-1)
+#define STATUS_STACK_OVERFLOW ((DWORD)0xC00000FDL)
+inline int _resetstkoflw() { return 1; }
+
+// text conversion; the engine's narrow strings are treated as UTF-8 here
+#define CP_ACP 0
+#define CP_UTF8 65001
+int MultiByteToWideChar(UINT code_page, DWORD flags, LPCSTR src, int src_len, wchar_t* dst, int dst_len);
+int WideCharToMultiByte(UINT code_page, DWORD flags, const wchar_t* src, int src_len, LPSTR dst, int dst_len,
+	LPCSTR default_char, BOOL* used_default);
+
+#define DXTRACE_ERR(str, hr) (hr)
+#define timeGetTime GetTickCount
+
+// time
+typedef int64_t __time64_t;
+inline __time32_t _time32(__time32_t* t)
+{
+	__time32_t now = (__time32_t)time(nullptr);
+	if (t) *t = now;
+	return now;
+}
+inline __time64_t _time64(__time64_t* t)
+{
+	__time64_t now = (__time64_t)time(nullptr);
+	if (t) *t = now;
+	return now;
+}
+inline tm* _localtime64(const __time64_t* t)
+{
+	time_t tt = (time_t)*t;
+	return localtime(&tt);
+}
+
+// more CRT
+#define _TRUNCATE ((size_t)-1)
+#define __min(a, b) (((a) < (b)) ? (a) : (b))
+#define __max(a, b) (((a) > (b)) ? (a) : (b))
+
+inline errno_t strncat_s(char* dst, size_t size, const char* src, size_t count)
+{
+	if (!dst || !size) return 22;
+	size_t len = strnlen(dst, size);
+	if (len >= size) return 22;
+	return strncpy_s(dst + len, size - len, src, count);
+}
+
+template <size_t N>
+inline errno_t strncat_s(char (&dst)[N], const char* src, size_t count) { return strncat_s(dst, N, src, count); }
+
+inline errno_t _strupr_s(char* s, size_t) { _strupr(s); return 0; }
+
+inline char* _ultoa(unsigned long value, char* buffer, int radix)
+{
+	if (radix == 16) snprintf(buffer, 33, "%lx", value);
+	else snprintf(buffer, 33, "%lu", value);
+	return buffer;
+}
+#define ultoa _ultoa
+
 // slim reader/writer lock
 typedef pthread_rwlock_t SRWLOCK;
 typedef SRWLOCK* PSRWLOCK;
@@ -499,5 +586,7 @@ inline void* InterlockedExchangePointer(void* volatile* v, void* x) { return __a
 
 #define INFINITE 0xFFFFFFFF
 #define sscanf_s sscanf
+
+#include "xrCore_window_posix.h"
 
 #endif // XRCORE_PLATFORM_POSIX_H

@@ -96,6 +96,8 @@ typedef struct tagcomplex {
 #include <string.h>
 #include <ctype.h>
 
+// the xrCore POSIX shim already provides these Windows types (with Windows sizes)
+#ifndef XRCORE_PLATFORM_POSIX_H
 typedef unsigned char  BYTE;
 typedef unsigned short WORD;
 typedef unsigned long  DWORD;
@@ -103,11 +105,12 @@ typedef unsigned int   UINT;
 
 typedef DWORD          COLORREF;
 typedef unsigned int   HANDLE;
-typedef void*          HRGN;
 
 #ifndef BOOL
 #define	BOOL bool
 #endif
+#endif // XRCORE_PLATFORM_POSIX_H
+typedef void*          HRGN;
 
 #ifndef TRUE
 #define	TRUE true
@@ -122,6 +125,7 @@ typedef void*          HRGN;
 #define _T
 #endif
 
+#ifndef XRCORE_PLATFORM_POSIX_H
 typedef struct tagRECT
 {
 	long    left;
@@ -135,6 +139,7 @@ typedef struct tagPOINT
 	long  x;
 	long  y;
 } POINT;
+#endif // XRCORE_PLATFORM_POSIX_H
 
 typedef struct tagRGBQUAD {
 	BYTE    rgbBlue;

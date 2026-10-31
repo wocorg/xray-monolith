@@ -15,6 +15,8 @@ class CPropertyEvaluatorMember : public CPropertyEvaluator<_object_type>
 {
 protected:
 	typedef CPropertyEvaluator<_object_type> inherited;
+
+public:
 	typedef typename inherited::_condition_type _condition_type;
 	typedef typename inherited::_value_type _value_type;
 

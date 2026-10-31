@@ -1198,8 +1198,15 @@ BOOL IPureClient::net_IsSyncronised()
 	return net_Syncronised;
 }
 
+#ifdef _WIN32
 #include <WINSOCK2.H>
 #include <Ws2tcpip.h>
+#else
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#endif
 
 bool IPureClient::GetServerAddress(ip_address& pAddress, DWORD* pPort)
 {

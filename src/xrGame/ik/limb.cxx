@@ -974,6 +974,9 @@ int Limb::InLimits(const float x[7]) const
 	return 1;
 }
 
+#ifdef roundup
+#undef roundup // macOS <sys/param.h> macro of the same name
+#endif
 float roundup(float x)
 {
 	if (x < 0)

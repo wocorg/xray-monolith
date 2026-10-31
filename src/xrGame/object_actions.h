@@ -53,6 +53,8 @@ class CObjectActionMember : public CObjectActionBase<_item_type>
 {
 protected:
 	typedef CObjectActionBase<_item_type> inherited;
+
+public:
 	typedef typename inherited::_condition_type _condition_type;
 	typedef typename inherited::_value_type _value_type;
 

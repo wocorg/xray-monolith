@@ -12,7 +12,7 @@
 
 namespace MonsterSpace
 {
-	enum EBodyState;
+	enum EBodyState XR_FWD_ENUM_U32;
 }; // namespace MonsterSpace
 
 namespace smart_cover

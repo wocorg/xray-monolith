@@ -18,6 +18,11 @@
 #	define CS_PLATFORM_XBOX_360
 #	define CS_STATIC_LIBRARIES
 #	define CS_PLATFORM_ID				[xbox_360]
+#elif defined(__APPLE__)
+	// macOS port: no Lua Studio debugger DLL, nothing is imported
+#	define CS_PLATFORM_MACOS
+#	define CS_STATIC_LIBRARIES
+#	define CS_PLATFORM_ID
 #else // #elif defined(_XBOX)
 	STATIC_CHECK(false, Unknown_Platform);
 #endif // #elif defined(_XBOX)

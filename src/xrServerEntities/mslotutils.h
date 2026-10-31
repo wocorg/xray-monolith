@@ -103,6 +103,7 @@ public:
 	};
 };
 
+#ifdef _WIN32
 inline HANDLE CreateMailSlotByName(LPSTR slotName)
 {
 	HANDLE hSlot = CreateMailslot(slotName,
@@ -208,3 +209,11 @@ inline BOOL CheckMailslotMessage(HANDLE hSlot, CMailSlotMsg& msg)
 	CloseHandle(hEvent);
 	return fResult;
 }
+#else
+// Mailslots (Win32 IPC used by the external Lua debugger) do not exist on macOS:
+// report that no slot exists and no message is waiting
+inline HANDLE CreateMailSlotByName(LPSTR) { return INVALID_HANDLE_VALUE; }
+inline BOOL CheckExisting(LPSTR) { return FALSE; }
+inline BOOL SendMailslotMessage(LPSTR, CMailSlotMsg&) { return FALSE; }
+inline BOOL CheckMailslotMessage(HANDLE, CMailSlotMsg&) { return FALSE; }
+#endif

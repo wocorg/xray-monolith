@@ -4,6 +4,7 @@
 // Nothing here talks to a GPU; the macOS renderer is a separate stage of the port.
 #pragma once
 #include "d3d9types.h"
+#include "ole2.h"
 
 typedef enum _D3DPRIMITIVETYPE
 {

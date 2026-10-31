@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <utime.h>
 #include <pwd.h>
+#include <dlfcn.h>
+#include <wchar.h>
 #include <malloc.h>
 #include <errno.h>
 #include <map>
@@ -20,13 +22,23 @@ extern "C" int _NSGetExecutablePath(char* buf, uint32_t* bufsize);
 
 namespace
 {
-enum class handle_kind { file, mapping };
+enum class handle_kind { file, mapping, event };
 
+// every HANDLE this file creates starts with its kind
 struct posix_handle
 {
 	handle_kind kind;
 	int fd;
 	bool writable;
+};
+
+struct posix_event
+{
+	handle_kind kind;
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
+	bool manual_reset;
+	bool signaled;
 };
 
 thread_local DWORD g_last_error = 0;
@@ -100,10 +112,181 @@ BOOL CloseHandle(HANDLE h)
 {
 	if (!h || h == INVALID_HANDLE_VALUE)
 		return FALSE;
+	if (*(handle_kind*)h == handle_kind::event)
+	{
+		auto* e = (posix_event*)h;
+		pthread_cond_destroy(&e->cond);
+		pthread_mutex_destroy(&e->mutex);
+		delete e;
+		return TRUE;
+	}
 	auto* ph = (posix_handle*)h;
 	close(ph->fd);
 	delete ph;
 	return TRUE;
+}
+
+// events
+HANDLE CreateEvent(LPSECURITY_ATTRIBUTES, BOOL manual_reset, BOOL initial_state, LPCSTR)
+{
+	auto* e = new posix_event{handle_kind::event, {}, {}, manual_reset != FALSE, initial_state != FALSE};
+	pthread_mutex_init(&e->mutex, nullptr);
+	pthread_cond_init(&e->cond, nullptr);
+	return e;
+}
+
+BOOL SetEvent(HANDLE h)
+{
+	auto* e = (posix_event*)h;
+	pthread_mutex_lock(&e->mutex);
+	e->signaled = true;
+	if (e->manual_reset)
+		pthread_cond_broadcast(&e->cond);
+	else
+		pthread_cond_signal(&e->cond);
+	pthread_mutex_unlock(&e->mutex);
+	return TRUE;
+}
+
+BOOL ResetEvent(HANDLE h)
+{
+	auto* e = (posix_event*)h;
+	pthread_mutex_lock(&e->mutex);
+	e->signaled = false;
+	pthread_mutex_unlock(&e->mutex);
+	return TRUE;
+}
+
+DWORD WaitForSingleObject(HANDLE h, DWORD milliseconds)
+{
+	if (!h || h == INVALID_HANDLE_VALUE || *(handle_kind*)h != handle_kind::event)
+		return WAIT_FAILED;
+
+	auto* e = (posix_event*)h;
+	pthread_mutex_lock(&e->mutex);
+	if (milliseconds == INFINITE)
+	{
+		while (!e->signaled)
+			pthread_cond_wait(&e->cond, &e->mutex);
+	}
+	else
+	{
+		timespec deadline;
+		clock_gettime(CLOCK_REALTIME, &deadline);
+		deadline.tv_sec += milliseconds / 1000;
+		deadline.tv_nsec += long(milliseconds % 1000) * 1000000;
+		if (deadline.tv_nsec >= 1000000000)
+		{
+			deadline.tv_sec += 1;
+			deadline.tv_nsec -= 1000000000;
+		}
+		while (!e->signaled)
+			if (pthread_cond_timedwait(&e->cond, &e->mutex, &deadline) != 0)
+				break;
+	}
+	DWORD result = e->signaled ? WAIT_OBJECT_0 : WAIT_TIMEOUT;
+	if (e->signaled && !e->manual_reset)
+		e->signaled = false; // auto-reset: one waiter consumes the signal
+	pthread_mutex_unlock(&e->mutex);
+	return result;
+}
+
+// modules
+HMODULE LoadLibrary(LPCSTR name)
+{
+	return dlopen(xr_posix_path(name).c_str(), RTLD_NOW | RTLD_LOCAL);
+}
+
+void* GetProcAddress(HMODULE module, LPCSTR name) { return module ? dlsym(module, name) : nullptr; }
+
+BOOL FreeLibrary(HMODULE module) { return module && dlclose(module) == 0; }
+
+DWORD GetFullPathName(LPCSTR name, DWORD size, LPSTR buffer, LPSTR* file_part)
+{
+	char resolved[PATH_MAX];
+	std::string path = xr_posix_path(name);
+	if (!realpath(path.c_str(), resolved))
+	{
+		// realpath needs an existing file; fall back to joining with the working directory
+		char cwd[PATH_MAX];
+		if (path.empty() || path[0] == '/' || !getcwd(cwd, sizeof(cwd)))
+			strcpy_s(resolved, path.c_str());
+		else
+			snprintf(resolved, sizeof(resolved), "%s/%s", cwd, path.c_str());
+	}
+	DWORD len = (DWORD)strlen(resolved);
+	if (len + 1 > size)
+		return len + 1;
+	strcpy_s(buffer, size, resolved);
+	if (file_part)
+	{
+		char* slash = strrchr(buffer, '/');
+		*file_part = slash ? slash + 1 : buffer;
+	}
+	return len;
+}
+
+// text conversion: UTF-8 <-> wchar_t (UTF-32 on macOS)
+int MultiByteToWideChar(UINT, DWORD, LPCSTR src, int src_len, wchar_t* dst, int dst_len)
+{
+	if (src_len < 0)
+		src_len = (int)strlen(src) + 1;
+	int out = 0;
+	for (int i = 0; i < src_len;)
+	{
+		unsigned char c = (unsigned char)src[i];
+		u32 cp = c;
+		int extra = c >= 0xF0 ? 3 : c >= 0xE0 ? 2 : c >= 0xC0 ? 1 : 0;
+		cp = extra == 3 ? (c & 0x07) : extra == 2 ? (c & 0x0F) : extra == 1 ? (c & 0x1F) : c;
+		++i;
+		for (int k = 0; k < extra && i < src_len; ++k, ++i)
+			cp = (cp << 6) | ((unsigned char)src[i] & 0x3F);
+		if (dst_len)
+		{
+			if (out >= dst_len)
+				return 0;
+			dst[out] = (wchar_t)cp;
+		}
+		++out;
+	}
+	return out;
+}
+
+int WideCharToMultiByte(UINT, DWORD, const wchar_t* src, int src_len, LPSTR dst, int dst_len, LPCSTR, BOOL* used_default)
+{
+	if (used_default)
+		*used_default = FALSE;
+	if (src_len < 0)
+		src_len = (int)wcslen(src) + 1;
+	int out = 0;
+	auto put = [&](char ch) -> bool {
+		if (dst_len)
+		{
+			if (out >= dst_len)
+				return false;
+			dst[out] = ch;
+		}
+		++out;
+		return true;
+	};
+	for (int i = 0; i < src_len; ++i)
+	{
+		u32 cp = (u32)src[i];
+		bool ok;
+		if (cp < 0x80)
+			ok = put((char)cp);
+		else if (cp < 0x800)
+			ok = put((char)(0xC0 | (cp >> 6))) && put((char)(0x80 | (cp & 0x3F)));
+		else if (cp < 0x10000)
+			ok = put((char)(0xE0 | (cp >> 12))) && put((char)(0x80 | ((cp >> 6) & 0x3F))) &&
+				put((char)(0x80 | (cp & 0x3F)));
+		else
+			ok = put((char)(0xF0 | (cp >> 18))) && put((char)(0x80 | ((cp >> 12) & 0x3F))) &&
+				put((char)(0x80 | ((cp >> 6) & 0x3F))) && put((char)(0x80 | (cp & 0x3F)));
+		if (!ok)
+			return 0;
+	}
+	return out;
 }
 
 HANDLE CreateFileMapping(HANDLE file, void* /*security*/, DWORD protect, DWORD /*size_high*/, DWORD /*size_low*/,
