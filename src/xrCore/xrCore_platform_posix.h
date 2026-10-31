@@ -75,6 +75,15 @@ typedef void* HBRUSH;
 typedef void* HBITMAP;
 typedef unsigned char boolean;
 typedef int32_t __time32_t;
+typedef char TCHAR;
+typedef char* LPTSTR;
+typedef const char* LPCTSTR;
+typedef DWORD COLORREF;
+typedef DWORD LCID;
+typedef void* HKL;
+typedef void* HKEY;
+typedef void* HGLOBAL;
+#define CW_USEDEFAULT ((int)0x80000000)
 
 #define WM_USER 0x0400
 #define _finite(x) std::isfinite(x)
@@ -210,6 +219,9 @@ inline int strcpy_s(char* dst, size_t size, const char* src)
 
 template <size_t N>
 inline int strcpy_s(char (&dst)[N], const char* src) { return strcpy_s(dst, N, src); }
+
+template <size_t N>
+inline int strncpy_s(char (&dst)[N], const char* src, size_t count) { return strncpy_s(dst, N, src, count); }
 
 inline int strcat_s(char* dst, size_t size, const char* src)
 {
@@ -462,16 +474,23 @@ inline void ReleaseSRWLockShared(PSRWLOCK l) { pthread_rwlock_unlock(l); }
 inline BOOL TryAcquireSRWLockExclusive(PSRWLOCK l) { return pthread_rwlock_trywrlock(l) == 0; }
 inline BOOL TryAcquireSRWLockShared(PSRWLOCK l) { return pthread_rwlock_tryrdlock(l) == 0; }
 
-// atomics
-inline LONG InterlockedIncrement(volatile LONG* v) { return __atomic_add_fetch(v, 1, __ATOMIC_SEQ_CST); }
-inline LONG InterlockedDecrement(volatile LONG* v) { return __atomic_sub_fetch(v, 1, __ATOMIC_SEQ_CST); }
-inline LONG InterlockedExchange(volatile LONG* v, LONG x) { return __atomic_exchange_n(v, x, __ATOMIC_SEQ_CST); }
-
-inline LONG InterlockedCompareExchange(volatile LONG* v, LONG x, LONG cmp)
+// atomics; templates because callers pass LONG, u32 and other 32/64-bit integers
+template <typename T>
+inline T InterlockedIncrement(volatile T* v) { return __atomic_add_fetch(v, T(1), __ATOMIC_SEQ_CST); }
+template <typename T>
+inline T InterlockedDecrement(volatile T* v) { return __atomic_sub_fetch(v, T(1), __ATOMIC_SEQ_CST); }
+template <typename T, typename V>
+inline T InterlockedExchange(volatile T* v, V x) { return __atomic_exchange_n(v, T(x), __ATOMIC_SEQ_CST); }
+template <typename T, typename V, typename C>
+inline T InterlockedCompareExchange(volatile T* v, V x, C cmp)
 {
-	__atomic_compare_exchange_n(v, &cmp, x, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
-	return cmp;
+	T expected = T(cmp);
+	__atomic_compare_exchange_n(v, &expected, T(x), false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+	return expected;
 }
+template <typename T, typename V>
+inline T InterlockedExchangeAdd(volatile T* v, V x) { return __atomic_fetch_add(v, T(x), __ATOMIC_SEQ_CST); }
+inline void* InterlockedExchangePointer(void* volatile* v, void* x) { return __atomic_exchange_n(v, x, __ATOMIC_SEQ_CST); }
 
 #define _InterlockedIncrement InterlockedIncrement
 #define _InterlockedDecrement InterlockedDecrement

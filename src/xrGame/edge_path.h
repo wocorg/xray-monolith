@@ -33,7 +33,7 @@ struct CEdgePath
 
 	template <template <typename _T> class _vertex>
 	class CDataStorage : public CVertexPath<bEuclidianHeuristics>::template CDataStorage<DataStorageEdgePath<_vertex>::
-			_vertex>
+			template _vertex>
 	{
 	public:
 		typedef typename CVertexPath<

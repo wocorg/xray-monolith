@@ -496,7 +496,7 @@ void CUIHudStatesWnd::SetAmmoIcon(const shared_str& sect_name)
 }
 
 // ------------------------------------------------------------------------------------------------
-#include <script_game_object.h>
+#include "script_game_object.h"
 
 static float dwLastFrame;
 

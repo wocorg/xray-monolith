@@ -25,7 +25,7 @@
 #include <process.h>
 #include <locale.h>
 
-#include <unicode\unistr.h>
+#include <unicode/unistr.h>
 #include <unicode\ucnv.h>
 #include <discord\discord.h>
 #include "../xrCore/profiler.h"

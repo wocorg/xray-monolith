@@ -42,7 +42,10 @@ add_compile_definitions(NDEBUG PURE_ALLOC)
 set(XRAY_MSVC_COMPAT_FLAGS
 	-fms-compatibility -fms-compatibility-version=19.33 -fgnuc-version=4.2.1
 	-U_MSC_VER -U_MSC_FULL_VER -U_MSC_BUILD
-	-Wno-microsoft)
+	-Wno-microsoft
+	# &Type(...) passed to a call: MSVC keeps the temporary alive for the full
+	# expression, as standard C++ would, it only forbids taking the address
+	-Wno-address-of-temporary)
 
 # sse2neon: the engine uses x86 SSE intrinsics directly; on arm64 the stand-in
 # <xmmintrin.h> etc. in src/xrCore/posix_include map them to NEON

@@ -46,7 +46,7 @@ struct CLoader
 		template <>
 		IC static void load_data<true>(T& data, M& stream, const P& p)
 		{
-			CLoader<M, P>::load_data(*(data = xr_new<object_type_traits::remove_pointer<T>::type>()), stream, p);
+			CLoader<M, P>::load_data(*(data = xr_new<typename object_type_traits::remove_pointer<T>::type>()), stream, p);
 		}
 	};
 
@@ -194,7 +194,7 @@ struct CLoader
 		u32 count = stream.r_u32();
 		for (u32 i = 0; i < count; ++i)
 		{
-			svector<T, size>::value_type temp;
+			typename svector<T, size>::value_type temp;
 			CLoader<M, P>::load_data(temp, stream, p);
 			if (p(data, temp))
 				data.push_back(temp);

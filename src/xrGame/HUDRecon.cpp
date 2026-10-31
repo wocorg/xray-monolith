@@ -29,7 +29,7 @@
 #include "inventory_item.h"
 #include "inventory.h"
 
-#include <ai/monsters/poltergeist/poltergeist.h>
+#include "ai/monsters/poltergeist/poltergeist.h"
 
 u32 C_DEFAULT D3DCOLOR_RGBA(0xff, 0xff, 0xff, 0x80);
 u32 C_ON_ENEMY D3DCOLOR_RGBA(0xff, 0, 0, 0x80);

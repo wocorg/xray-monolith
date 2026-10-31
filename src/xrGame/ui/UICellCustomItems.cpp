@@ -93,7 +93,7 @@ void CUIInventoryCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
 	}
 }
 
-#include <eatable_item.h>
+#include "eatable_item.h"
 
 bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {

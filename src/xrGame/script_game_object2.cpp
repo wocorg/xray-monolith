@@ -721,9 +721,9 @@ LPCSTR CScriptGameObject::get_visual_name() const
 	return object().cNameVisual().c_str();
 }
 
-#include <Inventory.h>
-#include <Weapon.h>
-#include <xr_level_controller.h>
+#include "Inventory.h"
+#include "Weapon.h"
+#include "xr_level_controller.h"
 
 void CScriptGameObject::reload_weapon()
 {

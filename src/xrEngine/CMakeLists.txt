@@ -112,14 +112,23 @@ add_library(xrEngine STATIC
 file(GLOB XRENGINE_DISCORD_SOURCES "${XRAY_SRC_DIR}/3rd party/discord/*.cpp")
 set_source_files_properties(${XRENGINE_DISCORD_SOURCES} PROPERTIES HEADER_FILE_ONLY ON)
 
-# DirectInput/XInput input implementation; TODO(macos-port): SDL-based input
-set_source_files_properties(Xr_input.cpp xr_input_xinput.cpp PROPERTIES HEADER_FILE_ONLY ON)
+# Win32-only parts, not built on macOS. TODO(macos-port): replace with SDL in the
+# window/input stage: DirectInput/XInput input, window creation and message handling,
+# the dedicated-server text console, monitor enumeration, keyboard layouts for ImGui,
+# AVI playback.
+set_source_files_properties(
+	Xr_input.cpp xr_input_xinput.cpp
+	Device_create.cpp Device_destroy.cpp Device_Initialize.cpp Device_wndproc.cpp
+	Text_Console.cpp Text_Console_WndProc.cpp
+	MonitorList.cpp imgui_base_input.cpp tntQAVI.cpp
+	PROPERTIES HEADER_FILE_ONLY ON)
 
 target_compile_options(xrEngine PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(xrEngine PRIVATE
 	"${XRAY_SRC_DIR}/3rd party/imgui"
 	"${XRAY_SRC_DIR}/3rd party/luabind"
 	"${XRAY_SRC_DIR}/3rd party/giflib"
+	"${XRAY_SRC_DIR}/3rd party/icu/include"
 )
 target_compile_definitions(xrEngine PRIVATE ENGINE_BUILD)
 target_compile_options(xrEngine PRIVATE ${XRAY_MSVC_COMPAT_FLAGS})

@@ -1243,6 +1243,9 @@ add_library(xrGame STATIC
 	"ZudaArtifact.cpp"
 )
 
+# Windows registry access (player settings in HKCU). TODO(macos-port): store in a file
+set_source_files_properties(RegistryFuncs.cpp PROPERTIES HEADER_FILE_ONLY ON)
+
 target_compile_options(xrGame PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(xrGame PRIVATE
 	${XRAY_SRC_DIR}

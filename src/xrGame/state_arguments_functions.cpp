@@ -5,9 +5,12 @@ namespace award_system
 {
 	//definitions of static members of functions_cf
 
-	ge_function<float> functions_cf<float>::ge_function;
-	le_function<float> functions_cf<float>::le_function;
+	template <typename T>
+	ge_function<T> functions_cf<T>::ge_function;
+	template <typename T>
+	le_function<T> functions_cf<T>::le_function;
 
-	ge_function<u32> functions_cf<u32>::ge_function;
-	le_function<u32> functions_cf<u32>::le_function;
+	// the instantiations in use
+	template class functions_cf<float>;
+	template class functions_cf<u32>;
 } //namespace award_system
