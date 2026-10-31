@@ -115,6 +115,15 @@ IC float _abs(float x) { return fabsf(x); }
 IC float _sqrt(float x) { return sqrtf(x); }
 IC float _sin(float x) { return sinf(x); }
 IC float _cos(float x) { return cosf(x); }
+#ifndef _MSC_VER
+// NaN, infinities and denormals are invalid (same classes as the _fpclass check below)
+IC BOOL _valid(const double x)
+{
+	return std::isfinite(x) && std::fpclassify(x) != FP_SUBNORMAL;
+}
+
+IC BOOL _valid(const float x) { return _valid(double(x)); }
+#else
 IC BOOL _valid(const float x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
@@ -152,6 +161,7 @@ IC BOOL _valid(const double x)
 	*/
 	return true;
 }
+#endif // _MSC_VER
 
 // int8
 IC s8 _abs(s8 x) { return (x >= 0) ? x : s8(-x); }

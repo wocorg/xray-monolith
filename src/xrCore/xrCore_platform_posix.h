@@ -11,6 +11,8 @@
 #include <cstring>
 #include <cstdarg>
 #include <cctype>
+#include <cmath>
+#include <unordered_map>
 #include <climits>
 #include <ctime>
 #include <strings.h>
@@ -95,6 +97,7 @@ typedef union _LARGE_INTEGER
 #define _snprintf snprintf
 #define _vsnprintf vsnprintf
 #define _alloca alloca
+#define _copysign copysign
 #define _access access
 #define _unlink unlink
 

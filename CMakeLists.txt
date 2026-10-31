@@ -17,6 +17,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	add_compile_options(
 		-fms-extensions
 		-fdeclspec
+		# MSVC resolves names in templates at instantiation; the engine relies on it
+		-fdelayed-template-parsing
 		-ferror-limit=0
 		-Wno-unknown-pragmas
 		-Wno-microsoft

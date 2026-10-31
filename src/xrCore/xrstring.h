@@ -253,8 +253,56 @@ IC bool IsUTF8(const char* string)
 	return true;
 }
 
+#ifndef _WIN32
+// Portable UTF-8 -> CP1251 for the characters the game texts use; others become '?'
+IC char UnicodeToCP1251(u32 cp)
+{
+	if (cp < 0x80) return (char)cp;
+	if (cp >= 0x0410 && cp <= 0x044F) return (char)(0xC0 + (cp - 0x0410));
+	switch (cp)
+	{
+	case 0x0401: return (char)0xA8; // Ё
+	case 0x0451: return (char)0xB8; // ё
+	case 0x0404: return (char)0xAA; // Є
+	case 0x0454: return (char)0xBA; // є
+	case 0x0406: return (char)0xB2; // І
+	case 0x0456: return (char)0xB3; // і
+	case 0x0407: return (char)0xAF; // Ї
+	case 0x0457: return (char)0xBF; // ї
+	case 0x00AB: return (char)0xAB; // «
+	case 0x00BB: return (char)0xBB; // »
+	case 0x2116: return (char)0xB9; // №
+	case 0x2013: return (char)0x96; // –
+	case 0x2014: return (char)0x97; // —
+	case 0x2026: return (char)0x85; // …
+	case 0x00A0: return (char)0xA0; // nbsp
+	}
+	return '?';
+}
+#endif
+
 IC xr_string UTF8_to_CP1251(xr_string const& utf8)
 {
+#ifndef _WIN32
+	if (utf8.empty() || !IsUTF8(utf8.data()))
+		return utf8;
+
+	xr_string out;
+	out.reserve(utf8.size());
+	const unsigned char* p = (const unsigned char*)utf8.c_str();
+	const unsigned char* e = p + utf8.size();
+	while (p < e)
+	{
+		u32 cp = *p;
+		int extra = cp >= 0xF0 ? 3 : cp >= 0xE0 ? 2 : cp >= 0xC0 ? 1 : 0;
+		cp = extra == 3 ? (cp & 0x07) : extra == 2 ? (cp & 0x0F) : extra == 1 ? (cp & 0x1F) : cp;
+		++p;
+		for (int i = 0; i < extra && p < e; ++i, ++p)
+			cp = (cp << 6) | (*p & 0x3F);
+		out += UnicodeToCP1251(cp);
+	}
+	return out;
+#else
 	if (!utf8.empty() && IsUTF8(utf8.data()))
 	{
 		int wchlen = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
@@ -270,6 +318,7 @@ IC xr_string UTF8_to_CP1251(xr_string const& utf8)
 	}
 
 	return utf8;
+#endif
 }
 
 #pragma pack(pop)
