@@ -7,7 +7,10 @@
 #include "SoundRender_Source.h"
 #include "SoundRender_Emitter.h"
 
+#ifdef _WIN32
+// audio device change notifications (Win32 COM); OpenAL Soft follows the default device on macOS
 #include "NotificationClient.h"
+#endif
 
 #include <AL/efx.h>
 
@@ -52,7 +55,9 @@ CSoundRender_Core::CSoundRender_Core()
 	fTimer_Value = Timer.GetElapsed_sec();
 	fTimer_Delta = 0.0f;
 	m_iPauseCounter = 1;
+#ifdef _WIN32
 	pSysNotification = xr_new<CNotificationClient>();
+#endif
 }
 
 CSoundRender_Core::~CSoundRender_Core()
@@ -63,7 +68,9 @@ CSoundRender_Core::~CSoundRender_Core()
 #else
 	xr_delete(geom_ENV);
 	xr_delete(geom_SOM);
+#ifdef _WIN32
 	xr_delete(pSysNotification);
+#endif
 #endif
 }
 

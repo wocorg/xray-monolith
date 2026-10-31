@@ -33,6 +33,7 @@ typedef int64_t LONGLONG;
 typedef uint64_t ULONGLONG;
 typedef char CHAR;
 typedef float FLOAT;
+typedef void VOID;
 typedef size_t SIZE_T;
 typedef intptr_t INT_PTR;
 typedef uintptr_t UINT_PTR;

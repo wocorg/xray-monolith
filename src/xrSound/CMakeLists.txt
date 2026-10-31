@@ -22,8 +22,9 @@ add_library(xrSound STATIC
 	stdafx.cpp
 )
 
-# guids.cpp only instantiates DirectSound GUIDs; keep it listed but don't compile it
-set_source_files_properties(guids.cpp PROPERTIES HEADER_FILE_ONLY ON)
+# Windows-only: guids.cpp instantiates DirectSound GUIDs, NotificationClient.cpp
+# listens for audio device changes through Win32 COM
+set_source_files_properties(guids.cpp NotificationClient.cpp PROPERTIES HEADER_FILE_ONLY ON)
 
 target_compile_options(xrSound PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(xrSound PRIVATE XRSOUND_EXPORTS)

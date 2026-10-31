@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _WIN32
 #include <msacm.h>
+#endif
 
 #include "SoundRender_Core.h"
 #include "SoundRender_Source.h"

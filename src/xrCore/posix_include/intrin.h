@@ -2,4 +2,7 @@
 #pragma once
 #if defined(__aarch64__)
 #include <sse2neon.h>
+// sse2neon defines __int64 as int64_t, which breaks "signed __int64";
+// clang already has the __int64 keyword in MS-extensions mode
+#undef __int64
 #endif
