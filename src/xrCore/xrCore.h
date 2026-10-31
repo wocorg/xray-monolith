@@ -30,14 +30,14 @@
 
 #if (defined(_DEBUG) || defined(MIXED) || defined(DEBUG)) && !defined(FORCE_NO_EXCEPTIONS)
 // "debug" or "mixed"
-#if !defined(_CPPUNWIND)
+#if defined(_MSC_VER) && !defined(_CPPUNWIND)
 #error Please enable exceptions...
 #endif
 #define _HAS_EXCEPTIONS 1 // STL
 #define XRAY_EXCEPTIONS 1 // XRAY
 #else
 // "release"
-#if defined(_CPPUNWIND) && !defined __BORLANDC__
+#if defined(_MSC_VER) && defined(_CPPUNWIND) && !defined __BORLANDC__
 #error Please disable exceptions...
 #endif
 #define _HAS_EXCEPTIONS 1 // STL
@@ -46,7 +46,7 @@
 #pragma warning(disable:4530)
 #endif
 
-#if !defined(_MT)
+#if defined(_MSC_VER) && !defined(_MT)
 // multithreading disabled
 #error Please enable multi-threaded library...
 #endif
@@ -114,13 +114,15 @@
 #define ICF __forceinline // !!! this should be used only in critical places found by PROFILER
 #ifdef _EDITOR
 # define ICN
-#else
+#elif defined(_MSC_VER)
 # define ICN __declspec (noinline)
+#else
+# define ICN __attribute__((noinline))
 #endif
 
 #define UNUSED(...) (void)(__VA_ARGS__)
 
-#ifndef DEBUG
+#if !defined(DEBUG) && defined(_MSC_VER)
 #pragma inline_depth ( 254 )
 #pragma inline_recursion( on )
 #ifndef __BORLANDC__
@@ -158,10 +160,15 @@
 #define _RC_CHOP RC_CHOP
 #define _RC_NEAR RC_NEAR
 #define _MCW_EM MCW_EM
-#else
+#elif defined(_WIN32)
 #define ALIGN(a) __declspec(align(a))
 #include <sys\utime.h>
 #define MODULE_NAME "xrCore.dll"
+#else
+#define ALIGN(a) __attribute__((aligned(a)))
+#include <utime.h>
+#define _utimbuf utimbuf
+#define MODULE_NAME "libxrCore.dylib"
 #endif
 
 
@@ -193,7 +200,7 @@
 #include <set>
 #include <map>
 
-#ifndef _EDITOR
+#if !defined(_EDITOR) && defined(_MSC_VER)
 # include <hash_map>
 # include <hash_set>
 #endif
@@ -288,7 +295,11 @@ DEFINE_VECTOR(shared_str, RStringVec, RStringVecIt);
 DEFINE_SET(shared_str, RStringSet, RStringSetIt);
 DEFINE_VECTOR(xr_rtoken, RTokenVec, RTokenVecIt);
 
+#ifdef _MSC_VER
 #define xr_pure_interface __interface
+#else
+#define xr_pure_interface struct
+#endif
 
 #include "FS.h"
 #include "log.h"
