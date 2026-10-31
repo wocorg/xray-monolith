@@ -119,5 +119,5 @@ target_include_directories(xrEngine PRIVATE
 	"${XRAY_SRC_DIR}/3rd party/giflib"
 )
 target_compile_definitions(xrEngine PRIVATE ENGINE_BUILD)
-target_link_libraries(xrEngine PUBLIC xrCore xrCDB xrAPI xrSound xrParticles xrPhysics xrXMLParser xrCPU_Pipe
+target_link_libraries(xrEngine PUBLIC xrCore xrCDB xrAPI xrNetServer xrSound xrParticles xrPhysics xrXMLParser xrCPU_Pipe
 	luabind ode PkgConfig::THEORA)

@@ -63,8 +63,10 @@ add_subdirectory(src/xrCPU_Pipe)
 add_subdirectory(src/xrSound)
 add_subdirectory(src/xrParticles)
 add_subdirectory(src/xrPhysics)
-# TODO(macos-port): xrNetServer is built on DirectPlay 8 (Windows-only); needs its own transport
-#add_subdirectory(src/xrNetServer)
+# xrNetServer is built on DirectPlay 8 (Windows-only). On macOS it compiles against a
+# COM stand-in where DirectPlay can't be created: single player works through the
+# direct in-process connection; multiplayer needs a new transport (TODO(macos-port)).
+add_subdirectory(src/xrNetServer)
 add_subdirectory(src/xrXMLParser)
 add_subdirectory(src/xrEngine)
 add_subdirectory(src/xrGame)
