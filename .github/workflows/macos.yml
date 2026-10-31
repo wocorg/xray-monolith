@@ -12,10 +12,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install tools
-        run: brew install ninja tbb luajit pkg-config
+        run: brew install ninja tbb luajit pkg-config libvorbis libogg openal-soft
 
       - name: Configure
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64
+        # openal-soft is keg-only, so its pkg-config file is not linked into the prefix
+        run: |
+          export PKG_CONFIG_PATH="$(brew --prefix openal-soft)/lib/pkgconfig:$PKG_CONFIG_PATH"
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64
 
       - name: Build
         shell: bash
