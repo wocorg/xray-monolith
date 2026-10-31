@@ -119,6 +119,12 @@ void MakeFilter(string1024& dest, LPCSTR info, LPCSTR ext)
 // start_flt_ext = -1-all 0..n-indices
 //------------------------------------------------------------------------------
 
+#ifndef _WIN32
+// Win32 common file dialogs are only used by the editor tools; the game never opens them
+bool EFS_Utils::GetOpenNameInternal(LPCSTR, LPSTR, int, bool, LPCSTR, int) { return false; }
+
+bool EFS_Utils::GetSaveName(LPCSTR, string_path&, LPCSTR, int) { return false; }
+#else
 // Vista uses this hook for old-style save dialog
 UINT_PTR CALLBACK OFNHookProcOldStyle(HWND, UINT, WPARAM, LPARAM)
 {
@@ -286,6 +292,8 @@ bool EFS_Utils::GetSaveName(LPCSTR initial, string_path& buffer, LPCSTR offset, 
 	strlwr(buffer);
 	return bRes;
 }
+
+#endif // _WIN32
 
 //----------------------------------------------------
 LPCSTR EFS_Utils::AppendFolderToName(LPSTR tex_name, u32 const tex_name_size, int depth, BOOL full_name)
