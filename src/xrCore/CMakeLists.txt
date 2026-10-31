@@ -78,4 +78,4 @@ target_compile_options(xrCore PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(xrCore PRIVATE XRCORE_EXPORTS)
 
 find_package(TBB REQUIRED)
-target_link_libraries(xrCore PUBLIC TBB::tbb)
+target_link_libraries(xrCore PUBLIC TBB::tbb sse2neon)

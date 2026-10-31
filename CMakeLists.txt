@@ -33,6 +33,17 @@ endif()
 
 add_compile_definitions(NDEBUG PURE_ALLOC)
 
+# sse2neon: the engine uses x86 SSE intrinsics directly; on arm64 the stand-in
+# <xmmintrin.h> etc. in src/xrCore/posix_include map them to NEON
+include(FetchContent)
+FetchContent_Declare(sse2neon
+	GIT_REPOSITORY https://github.com/DLTcollab/sse2neon.git
+	GIT_TAG v1.7.0
+	GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(sse2neon)
+add_library(sse2neon INTERFACE)
+target_include_directories(sse2neon SYSTEM INTERFACE ${sse2neon_SOURCE_DIR})
+
 # LuaJIT 2.1 (Homebrew): 2.0.4 vendored in src/3rd party/luajit-2 has no arm64 support
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LUAJIT REQUIRED IMPORTED_TARGET luajit)

@@ -53,6 +53,39 @@ typedef void* HANDLE;
 typedef void* HMODULE;
 typedef void* HINSTANCE;
 typedef void* HWND;
+typedef void* HMONITOR;
+typedef void* HDC;
+typedef void* HICON;
+typedef void* HCURSOR;
+typedef uint32_t UINT32;
+typedef int32_t INT32;
+typedef uint64_t UINT64;
+typedef int64_t INT64;
+typedef UINT_PTR WPARAM;
+typedef LONG_PTR LPARAM;
+typedef LONG_PTR LRESULT;
+typedef LONG HRESULT;
+
+#define S_OK ((HRESULT)0)
+#define S_FALSE ((HRESULT)1)
+#define E_FAIL ((HRESULT)0x80004005)
+#define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
+#define FAILED(hr) (((HRESULT)(hr)) < 0)
+
+typedef struct tagRECT
+{
+	LONG left, top, right, bottom;
+} RECT, *LPRECT;
+
+typedef struct tagPOINT
+{
+	LONG x, y;
+} POINT, *LPPOINT;
+
+#define DLL_PROCESS_DETACH 0
+#define DLL_PROCESS_ATTACH 1
+#define DLL_THREAD_ATTACH 2
+#define DLL_THREAD_DETACH 3
 
 typedef union _LARGE_INTEGER
 {
