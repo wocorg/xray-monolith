@@ -89,7 +89,7 @@ namespace ALife
 		eRelationTypeDummy = u32(-1),
 	};
 
-	enum EHitType
+	enum EHitType : int // fixed type so it can be forward-declared
 	{
 		eHitTypeBurn = u32(0),
 		eHitTypeShock,

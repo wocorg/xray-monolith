@@ -20,7 +20,7 @@ class CPHAICharacter;
 
 namespace ALife
 {
-	enum EHitType;
+	enum EHitType : int;
 };
 
 static enum EEnvironment

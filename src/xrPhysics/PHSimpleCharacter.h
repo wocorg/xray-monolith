@@ -8,7 +8,7 @@
 
 namespace ALife
 {
-	enum EHitType;
+	enum EHitType : int;
 };
 #ifdef DEBUG
 #include "debug_output.h"

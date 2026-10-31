@@ -71,9 +71,9 @@ int SetBackTrajectoryCnt(const dReal* p, const dReal* last_pos, Triangle& neg_tr
 	return 1;
 }
 
-template <class T>
+template <class TPrimitive> // not T: the body has a local named T
 IC int dcTriListCollider::dSortTriPrimitiveCollide(
-	T primitive,
+	TPrimitive primitive,
 	dxGeom* o1, dxGeom* o2,
 	int flags, dContactGeom* contact, int skip,
 	const Fvector& AABB

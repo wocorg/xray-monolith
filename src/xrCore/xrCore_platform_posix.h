@@ -125,6 +125,8 @@ typedef union _LARGE_INTEGER
 // CRT name differences
 #define _stricmp strcasecmp
 #define stricmp strcasecmp
+#define strcmpi strcasecmp
+#define _strcmpi strcasecmp
 #define _strnicmp strncasecmp
 #define strnicmp strncasecmp
 #define _snprintf snprintf
@@ -235,6 +237,14 @@ inline int sprintf_s(char (&dst)[N], const char* fmt, ...)
 	int r = vsnprintf(dst, N, fmt, args);
 	va_end(args);
 	return r;
+}
+
+// threads
+inline DWORD GetCurrentThreadId()
+{
+	uint64_t id = 0;
+	pthread_threadid_np(nullptr, &id);
+	return (DWORD)id;
 }
 
 // timing

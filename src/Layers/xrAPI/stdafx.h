@@ -25,7 +25,11 @@
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "../../xrCore/xrCore_platform.h"
+#endif
 
 
 // TODO: reference additional headers your program requires here

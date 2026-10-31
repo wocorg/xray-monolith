@@ -96,6 +96,13 @@ class resptr_core : public C
 protected:
 	typedef resptr_core this_type;
 	typedef resptr_core<T, C> self;
+#ifndef _MSC_VER
+	// members of the dependent base C, for standard two-phase lookup
+	using C::p_;
+	using C::_inc;
+	using C::_dec;
+	using C::_set;
+#endif
 public:
 	// construction
 	resptr_core() { p_ = 0; }
