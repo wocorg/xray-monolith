@@ -51,6 +51,8 @@ pkg_check_modules(LUAJIT REQUIRED IMPORTED_TARGET luajit)
 # sound: Ogg Vorbis and OpenAL Soft (Homebrew; Windows builds use the vendored OpenAL-new)
 pkg_check_modules(VORBIS REQUIRED IMPORTED_TARGET vorbisfile vorbis ogg)
 pkg_check_modules(OPENAL REQUIRED IMPORTED_TARGET openal)
+# video (Theora) for intro/cutscene playback
+pkg_check_modules(THEORA REQUIRED IMPORTED_TARGET theoradec theora)
 
 add_subdirectory(src/xrCore)
 add_subdirectory("src/3rd party/luabind")
@@ -64,3 +66,5 @@ add_subdirectory(src/xrPhysics)
 # TODO(macos-port): xrNetServer is built on DirectPlay 8 (Windows-only); needs its own transport
 #add_subdirectory(src/xrNetServer)
 add_subdirectory(src/xrXMLParser)
+add_subdirectory(src/xrEngine)
+add_subdirectory(src/xrGame)
