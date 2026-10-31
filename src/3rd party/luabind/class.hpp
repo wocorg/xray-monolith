@@ -30,7 +30,7 @@
 	if we have a base class that defines a function a derived class must be able to
 	override that function (not just overload). Right now we just add the other overload
 	to the overloads list and will probably get an ambiguity. If we want to support this
-	each method_rep must include a vector of type_info pointers for each parameter.
+	each method_rep must include a vector of std::type_info pointers for each parameter.
 	Operators do not have this problem, since operators always have to have
 	it's own type as one of the arguments, no ambiguity can occur. Application
 	operator, on the other hand, would have this problem.
@@ -349,7 +349,7 @@ namespace luabind
 
 
 
-		// this is simply a selector that returns the type_info
+		// this is simply a selector that returns the std::type_info
 		// of the held type, or invalid_type_info if we don't have
 		// a held_type
 		template<typename HeldType>

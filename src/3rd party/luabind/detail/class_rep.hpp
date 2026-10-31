@@ -313,7 +313,7 @@ namespace luabind { namespace detail
 
 		void cache_operators(lua_State*);
 
-		// this is a pointer to the type_info structure for
+		// this is a pointer to the std::type_info structure for
 		// this type
 		// warning: this may be a problem when using dll:s, since
 		// typeid() may actually return different pointers for the same

@@ -24,11 +24,9 @@
 
 #define LUABIND_DONT_COPY_STRINGS
 
+// luabind names std::type_info explicitly: with clang in MS-compatibility mode a
+// global ::type_info is predeclared that is a different class from std::type_info
 #include <typeinfo>
-#ifndef _MSC_VER
-// MSVC also declares type_info in the global namespace; luabind relies on that
-using std::type_info;
-#endif
 
 #ifndef LUA_DEBUG
 
@@ -75,7 +73,7 @@ using std::type_info;
 // for all classes that you have type-info for.
 
 #ifndef LUABIND_TYPE_INFO
-#	define LUABIND_TYPE_INFO const type_info*
+#	define LUABIND_TYPE_INFO const std::type_info*
 #	define LUABIND_TYPEID(t) &typeid(t)
 #	define LUABIND_TYPE_INFO_EQUAL(i1, i2) *i1 == *i2
 #	define LUABIND_INVALID_TYPE_INFO &typeid(std::in_place_t)

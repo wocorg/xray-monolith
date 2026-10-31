@@ -70,6 +70,14 @@ typedef void* HINSTANCE;
 typedef void* HWND;
 typedef void* HMONITOR;
 typedef void* HDC;
+typedef void* HFONT;
+typedef void* HBRUSH;
+typedef void* HBITMAP;
+typedef unsigned char boolean;
+typedef int32_t __time32_t;
+
+#define WM_USER 0x0400
+#define _finite(x) std::isfinite(x)
 typedef void* HICON;
 typedef void* HCURSOR;
 typedef uint32_t UINT32;
