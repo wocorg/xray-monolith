@@ -35,7 +35,7 @@ set(XRCORE_SOURCES
 	stream_reader.cpp
 	string_concatenations.cpp
 	xrCore.cpp
-	xrDebugNew.cpp
+	xrDebug_posix.cpp
 	xrMemory.cpp
 	xrMemory_align.cpp
 	xrMemory_debug.cpp
@@ -56,7 +56,8 @@ set(XRCORE_SOURCES
 	_std_extensions.cpp
 	xrCore_platform_posix.cpp
 )
-# Not built on macOS: blackbox/* (Win32 crash handler), FileSystem_borland.cpp,
+# Not built on macOS: xrDebugNew.cpp (replaced by xrDebug_posix.cpp),
+# blackbox/* (Win32 crash handler), FileSystem_borland.cpp,
 # xrMemory_subst_borland.cpp, xrDebug.cpp and LocatorAPI_Notifications.cpp
 # (both already excluded in xrCore.vcxproj).
 

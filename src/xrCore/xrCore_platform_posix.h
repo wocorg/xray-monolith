@@ -164,6 +164,27 @@ inline int vsprintf_s(char* dst, size_t size, const char* fmt, va_list args)
 	return vsnprintf(dst, size, fmt, args);
 }
 
+template <size_t N>
+inline int vsprintf_s(char (&dst)[N], const char* fmt, va_list args) { return vsnprintf(dst, N, fmt, args); }
+
+#define _atoi64(s) strtoll((s), nullptr, 10)
+#define _strtoui64 strtoull
+#define _strtoi64 strtoll
+
+inline errno_t _i64toa_s(long long value, char* buffer, size_t size, int radix)
+{
+	if (radix == 16) snprintf(buffer, size, "%llx", value);
+	else snprintf(buffer, size, "%lld", value);
+	return 0;
+}
+
+inline errno_t _ui64toa_s(unsigned long long value, char* buffer, size_t size, int radix)
+{
+	if (radix == 16) snprintf(buffer, size, "%llx", value);
+	else snprintf(buffer, size, "%llu", value);
+	return 0;
+}
+
 inline int sprintf_s(char* dst, size_t size, const char* fmt, ...)
 {
 	va_list args;
@@ -257,6 +278,31 @@ BOOL UnmapViewOfFile(LPCVOID ptr);
 DWORD GetFileAttributes(LPCSTR name);
 BOOL SetFileAttributes(LPCSTR name, DWORD attr);
 
+#define FILE_BEGIN SEEK_SET
+#define FILE_CURRENT SEEK_CUR
+#define FILE_END SEEK_END
+#define INVALID_SET_FILE_POINTER ((DWORD)-1)
+BOOL ReadFile(HANDLE h, LPVOID buffer, DWORD size, LPDWORD read, void* overlapped);
+BOOL WriteFile(HANDLE h, LPCVOID buffer, DWORD size, LPDWORD written, void* overlapped);
+DWORD SetFilePointer(HANDLE h, LONG distance, LONG* distance_high, DWORD method);
+
+// Only used as a debug sanity check before reading memory
+inline BOOL IsBadReadPtr(const void* ptr, UINT_PTR) { return ptr == nullptr; }
+
+#define MB_OK 0x0
+#define MB_OKCANCEL 0x1
+#define MB_YESNO 0x4
+#define MB_ICONERROR 0x10
+#define MB_ICONWARNING 0x30
+#define MB_ICONINFORMATION 0x40
+#define MB_SYSTEMMODAL 0x1000
+#define MB_TOPMOST 0x40000
+#define IDOK 1
+#define IDCANCEL 2
+#define IDYES 6
+#define IDNO 7
+int MessageBox(HWND parent, LPCSTR text, LPCSTR caption, UINT type);
+
 struct SYSTEM_INFO
 {
 	DWORD dwPageSize;
@@ -281,6 +327,7 @@ char* _strtime(char* buffer);
 char* _itoa(int value, char* buffer, int radix);
 #define itoa _itoa
 #define _getcwd getcwd
+#define _rmdir rmdir
 
 void* _aligned_malloc(size_t size, size_t alignment);
 void* _aligned_realloc(void* ptr, size_t size, size_t alignment);

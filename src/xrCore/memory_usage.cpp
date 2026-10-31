@@ -2,6 +2,22 @@
 #include <malloc.h>
 #include <errno.h>
 
+#ifndef _WIN32
+// No VirtualQuery/_heapwalk on macOS; these only feed log statistics
+XRCORE_API void vminfo(size_t* _free, size_t* reserved, size_t* committed)
+{
+	*_free = *reserved = *committed = 0;
+}
+
+XRCORE_API void log_vminfo()
+{
+}
+
+size_t xrMemory::mem_usage()
+{
+	return 0;
+}
+#else
 XRCORE_API void vminfo(size_t* _free, size_t* reserved, size_t* committed)
 {
 	MEMORY_BASIC_INFORMATION memory_info;
@@ -65,3 +81,4 @@ size_t xrMemory::mem_usage()
 	}
 	return bytesUsed;
 }
+#endif // _WIN32

@@ -9,11 +9,14 @@
 #include <sys/stat.h>
 #include <utime.h>
 #include <pwd.h>
-#include <mach-o/dyld.h>
+#include <malloc.h>
 #include <errno.h>
 #include <map>
 #include <mutex>
 #include <string>
+
+// from <mach-o/dyld.h>, which can't be included next to the engine's thread_t
+extern "C" int _NSGetExecutablePath(char* buf, uint32_t* bufsize);
 
 namespace
 {
@@ -157,6 +160,48 @@ BOOL UnmapViewOfFile(LPCVOID ptr)
 		g_views.erase(it);
 	}
 	return munmap((void*)ptr, size) == 0;
+}
+
+BOOL ReadFile(HANDLE h, LPVOID buffer, DWORD size, LPDWORD read_bytes, void* /*overlapped*/)
+{
+	if (h == INVALID_HANDLE_VALUE)
+		return FALSE;
+	ssize_t n = read(((posix_handle*)h)->fd, buffer, size);
+	if (read_bytes) *read_bytes = n > 0 ? DWORD(n) : 0;
+	if (n < 0) set_error_from_errno();
+	return n >= 0;
+}
+
+BOOL WriteFile(HANDLE h, LPCVOID buffer, DWORD size, LPDWORD written, void* /*overlapped*/)
+{
+	if (h == INVALID_HANDLE_VALUE)
+		return FALSE;
+	ssize_t n = write(((posix_handle*)h)->fd, buffer, size);
+	if (written) *written = n > 0 ? DWORD(n) : 0;
+	if (n < 0) set_error_from_errno();
+	return n >= 0;
+}
+
+DWORD SetFilePointer(HANDLE h, LONG distance, LONG* distance_high, DWORD method)
+{
+	if (h == INVALID_HANDLE_VALUE)
+		return INVALID_SET_FILE_POINTER;
+	off_t offset = distance_high ? off_t((u64(u32(*distance_high)) << 32) | u32(distance)) : off_t(distance);
+	off_t pos = lseek(((posix_handle*)h)->fd, offset, (int)method);
+	if (pos < 0)
+	{
+		set_error_from_errno();
+		return INVALID_SET_FILE_POINTER;
+	}
+	if (distance_high) *distance_high = LONG(u64(pos) >> 32);
+	return DWORD(pos);
+}
+
+int MessageBox(HWND /*parent*/, LPCSTR text, LPCSTR caption, UINT /*type*/)
+{
+	// TODO(macos-port): native dialog once the SDL window layer exists
+	fprintf(stderr, "[%s] %s\n", caption ? caption : "", text ? text : "");
+	return IDOK;
 }
 
 DWORD GetFileAttributes(LPCSTR name)

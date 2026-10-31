@@ -5,9 +5,11 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _WIN32
 #include "cderr.h"
 #include "commdlg.h"
 #include "vfw.h"
+#endif
 
 EFS_Utils* xr_EFS = NULL;
 //----------------------------------------------------

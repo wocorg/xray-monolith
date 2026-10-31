@@ -1,6 +1,9 @@
 #include "stdafx.h"
 
 #include <array>
+#if defined(__aarch64__)
+#include <arm_acle.h>
+#endif
 
 namespace
 {
@@ -35,6 +38,47 @@ namespace
 
     static constexpr auto crc32_table = generate_crc32_lookup_table();
 
+#if defined(__aarch64__)
+    // The SSE4.2 crc32 instruction computes CRC-32C; ARMv8 has the same CRC-32C
+    // instructions, so results match the Windows build on SSE4.2 CPUs.
+    u32 crc32_sse42(const void* P, u32 len, u32 starting_crc = ~0u) noexcept
+    {
+        const u8* buffer = static_cast<const u8*>(P);
+        u32 crc = starting_crc;
+
+        while (len >= 8)
+        {
+            crc = __crc32cd(crc, *reinterpret_cast<const u64*>(buffer));
+            buffer += 8;
+            len -= 8;
+        }
+
+        if (len >= 4)
+        {
+            crc = __crc32cw(crc, *reinterpret_cast<const u32*>(buffer));
+            buffer += 4;
+            len -= 4;
+        }
+
+        if (len >= 2)
+        {
+            crc = __crc32ch(crc, *reinterpret_cast<const u16*>(buffer));
+            buffer += 2;
+            len -= 2;
+        }
+
+        if (len)
+        {
+            crc = __crc32cb(crc, *buffer);
+        }
+
+        return crc;
+    }
+
+    bool has_hw_crc32c() noexcept { return true; }
+#else
+    bool has_hw_crc32c() noexcept { return CPU::ID.feature & _CPU_FEATURE_SSE4_2; }
+
     u32 crc32_sse42(const void* P, u32 len, u32 starting_crc = ~0u) noexcept
     {
         const u8* buffer = static_cast<const u8*>(P);
@@ -68,11 +112,12 @@ namespace
 
         return crc;
     }
+#endif
 }
 
 u32 crc32(const void* P, u32 len)
 {
-    if (CPU::ID.feature & _CPU_FEATURE_SSE4_2)
+    if (has_hw_crc32c())
     {
         return crc32_sse42(P, len);
     }
@@ -90,7 +135,7 @@ u32 crc32(const void* P, u32 len)
 
 u32 crc32(const void* P, u32 len, u32 starting_crc)
 {
-    if (CPU::ID.feature & _CPU_FEATURE_SSE4_2)
+    if (has_hw_crc32c())
     {
         return crc32_sse42(P, len, ~starting_crc);
     }

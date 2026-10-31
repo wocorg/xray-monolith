@@ -78,6 +78,9 @@ struct _finddata_t
 	_fsize_t size;
 	char name[260];
 };
+#define _finddata64i32_t _finddata_t
+#define _findfirst64i32 _findfirst
+#define _findnext64i32 _findnext
 
 namespace xr_io_posix
 {

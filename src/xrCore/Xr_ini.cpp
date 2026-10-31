@@ -553,7 +553,7 @@ void CInifile::LTXLoad (
 			_splitpath_s(m_file_name, split_drive, split_drive.GetSize(), split_dir, split_dir.GetSize(), split_name, split_name.GetSize(), NULL, 0);
 
 			xr_string FilePath = xr_string(split_drive) + xr_string(split_dir);
-			xr_string FileName = split_name;
+			xr_string FileName(split_name);
 
 			// Collect all files that could potentially be confused as a root file by our mod files
 			FS_FileSet AmbiguousFiles;
@@ -610,7 +610,7 @@ void CInifile::LTXLoad (
 
 			continue;
 		}
-		xr_string currentLine = str;
+		xr_string currentLine(str);
 
 		// Parse comment - single pass instead of multiple strchr calls
 		LPSTR comm = strchr(str, ';');
@@ -863,7 +863,8 @@ void CInifile::LTXLoad (
 			}
 			I.second = bIsDelete ? DLTX_DELETE.c_str() : (str2[0] ? str2.GetBuffer() : NULL);
 
-			auto fname = toLowerCaseCopy(trimCopy(getFilename(std::string(currentFileName))));
+			std::string currentFileNameStr(currentFileName);
+			auto fname = toLowerCaseCopy(trimCopy(getFilename(currentFileNameStr)));
 			I.filename = fname.c_str();
 			I.depth = depth;
 
