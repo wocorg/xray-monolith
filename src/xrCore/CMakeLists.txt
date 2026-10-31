@@ -62,10 +62,15 @@ set(XRCORE_SOURCES
 add_library(xrCore STATIC ${XRCORE_SOURCES})
 
 target_include_directories(xrCore PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
 	${XRAY_SRC_DIR}
 	"${XRAY_SRC_DIR}/3rd party"
 	${XRAY_SDK_DIR}/include
 )
+# xrCore has headers named like system ones (_types.h, log.h, vector.h...),
+# so expose its directory to "" includes only, never to <> includes.
+target_compile_options(xrCore PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_compile_definitions(xrCore PRIVATE XRCORE_EXPORTS)
+
+find_package(TBB REQUIRED)
+target_link_libraries(xrCore PUBLIC TBB::tbb)

@@ -71,6 +71,11 @@ typedef union _LARGE_INTEGER
 #ifndef MAX_PATH
 # define MAX_PATH 260
 #endif
+#define _MAX_PATH 260
+#define _MAX_DRIVE 3
+#define _MAX_DIR 256
+#define _MAX_FNAME 256
+#define _MAX_EXT 256
 
 #define WINAPI
 #define CALLBACK

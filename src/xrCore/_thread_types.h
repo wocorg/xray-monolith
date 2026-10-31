@@ -1,8 +1,19 @@
 #pragma once
 
+#ifdef _MSC_VER
 #include <ppl.h>
 #include <concurrent_unordered_map.h>
 #include <concurrent_vector.h>
+#else
+// oneTBB provides the same parallel algorithms and containers as PPL
+#include <tbb/task_group.h>
+#include <tbb/concurrent_unordered_map.h>
+#include <tbb/concurrent_vector.h>
+#include <tbb/parallel_for.h>
+#include <tbb/parallel_for_each.h>
+#include <tbb/parallel_sort.h>
+namespace concurrency = tbb;
+#endif
 #include <atomic>
 
 // Atomic types

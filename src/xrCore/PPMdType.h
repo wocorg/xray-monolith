@@ -19,7 +19,11 @@
 #endif /* defined(_WIN32_ENVIRONMENT_)+defined(_DOS32_ENVIRONMENT_)+defined(_POSIX_ENVIRONMENT_)+defined(_UNKNOWN_ENVIRONMENT_) != 1 */
 
 #if defined(_WIN32_ENVIRONMENT_)
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "xrCore_platform.h"
+#endif
 #else /* _DOS32_ENVIRONMENT_ || _POSIX_ENVIRONMENT_ || _UNKNOWN_ENVIRONMENT_ */
 typedef int   BOOL;
 #define FALSE 0
