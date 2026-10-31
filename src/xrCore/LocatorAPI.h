@@ -8,7 +8,11 @@
 
 #pragma warning(push)
 #pragma warning(disable:4995)
+#ifdef _WIN32
 #include <io.h>
+#else
+#include "xrCore_io_posix.h"
+#endif
 #pragma warning(pop)
 
 #include "LocatorAPI_defs.h"

@@ -117,6 +117,24 @@ inline char* _strupr(char* s)
 #define strupr _strupr
 
 // secure CRT functions; return 0 on success like MSVC
+typedef int errno_t;
+
+inline int strncpy_s(char* dst, size_t size, const char* src, size_t count)
+{
+	if (!dst || !size) return 22;
+	size_t n = src ? strnlen(src, count) : 0;
+	if (n >= size) n = size - 1;
+	memcpy(dst, src, n);
+	dst[n] = 0;
+	return 0;
+}
+
+inline int vsnprintf_s(char* dst, size_t size, size_t count, const char* fmt, va_list args)
+{
+	size_t limit = count + 1 < size ? count + 1 : size;
+	return vsnprintf(dst, limit, fmt, args);
+}
+
 inline int strcpy_s(char* dst, size_t size, const char* src)
 {
 	if (!dst || !size) return 22;
@@ -184,6 +202,17 @@ inline BOOL QueryPerformanceCounter(LARGE_INTEGER* c)
 	c->QuadPart = (LONGLONG)clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
 	return TRUE;
 }
+
+// slim reader/writer lock
+typedef pthread_rwlock_t SRWLOCK;
+typedef SRWLOCK* PSRWLOCK;
+inline void InitializeSRWLock(PSRWLOCK l) { pthread_rwlock_init(l, nullptr); }
+inline void AcquireSRWLockExclusive(PSRWLOCK l) { pthread_rwlock_wrlock(l); }
+inline void ReleaseSRWLockExclusive(PSRWLOCK l) { pthread_rwlock_unlock(l); }
+inline void AcquireSRWLockShared(PSRWLOCK l) { pthread_rwlock_rdlock(l); }
+inline void ReleaseSRWLockShared(PSRWLOCK l) { pthread_rwlock_unlock(l); }
+inline BOOL TryAcquireSRWLockExclusive(PSRWLOCK l) { return pthread_rwlock_trywrlock(l) == 0; }
+inline BOOL TryAcquireSRWLockShared(PSRWLOCK l) { return pthread_rwlock_tryrdlock(l) == 0; }
 
 // atomics
 inline LONG InterlockedIncrement(volatile LONG* v) { return __atomic_add_fetch(v, 1, __ATOMIC_SEQ_CST); }

@@ -19,6 +19,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 		-fdeclspec
 		# MSVC resolves names in templates at instantiation; the engine relies on it
 		-fdelayed-template-parsing
+		# the engine has methods named or/and/xor (e.g. _flags::or)
+		-fno-operator-names
 		-ferror-limit=0
 		-Wno-unknown-pragmas
 		-Wno-microsoft

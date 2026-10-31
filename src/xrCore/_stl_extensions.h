@@ -156,6 +156,14 @@ private:
 
 public:
 	typedef allocator allocator_type;
+	typedef typename inherited::size_type size_type;
+	typedef typename inherited::reference reference;
+	typedef typename inherited::const_reference const_reference;
+	using inherited::begin;
+	using inherited::end;
+	using inherited::erase;
+	using inherited::capacity;
+	using inherited::reserve;
 
 public:
 	xr_vector() : inherited()
