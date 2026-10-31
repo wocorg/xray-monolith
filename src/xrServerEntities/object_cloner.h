@@ -22,7 +22,7 @@ struct CCloner
 		template <>
 		IC static void clone<true>(const T& _1, T& _2)
 		{
-			_2 = xr_new<object_type_traits::remove_pointer<T>::type>(*_1);
+			_2 = xr_new<typename object_type_traits::remove_pointer<T>::type>(*_1);
 			CCloner::clone(*_1, *_2);
 		}
 	};

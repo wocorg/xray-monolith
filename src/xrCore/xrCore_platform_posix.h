@@ -78,6 +78,7 @@ typedef int32_t __time32_t;
 typedef char TCHAR;
 typedef char* LPTSTR;
 typedef const char* LPCTSTR;
+#define _tfopen fopen
 typedef DWORD COLORREF;
 typedef DWORD LCID;
 typedef void* HKL;
@@ -477,6 +478,14 @@ DWORD WaitForSingleObject(HANDLE handle, DWORD milliseconds);
 // processes and modules
 inline HANDLE GetCurrentProcess() { return (HANDLE)(intptr_t)-1; }
 inline DWORD GetCurrentProcessId() { return (DWORD)getpid(); }
+inline BOOL GetProcessAffinityMask(HANDLE, DWORD_PTR* process_mask, DWORD_PTR* system_mask)
+{
+	long n = sysconf(_SC_NPROCESSORS_ONLN);
+	DWORD_PTR mask = n >= 64 ? ~DWORD_PTR(0) : ((DWORD_PTR(1) << n) - 1);
+	if (process_mask) *process_mask = mask;
+	if (system_mask) *system_mask = mask;
+	return TRUE;
+}
 HMODULE LoadLibrary(LPCSTR name);
 #define LoadLibraryA LoadLibrary
 void* GetProcAddress(HMODULE module, LPCSTR name);
@@ -504,8 +513,8 @@ int WideCharToMultiByte(UINT code_page, DWORD flags, const wchar_t* src, int src
 #define DXTRACE_ERR(str, hr) (hr)
 #define timeGetTime GetTickCount
 
-// time
-typedef int64_t __time64_t;
+// time (time_t is already 64-bit on macOS)
+typedef time_t __time64_t;
 inline __time32_t _time32(__time32_t* t)
 {
 	__time32_t now = (__time32_t)time(nullptr);
@@ -541,6 +550,8 @@ template <size_t N>
 inline errno_t strncat_s(char (&dst)[N], const char* src, size_t count) { return strncat_s(dst, N, src, count); }
 
 inline errno_t _strupr_s(char* s, size_t) { _strupr(s); return 0; }
+template <size_t N>
+inline errno_t _strupr_s(char (&s)[N]) { _strupr(s); return 0; }
 
 inline char* _ultoa(unsigned long value, char* buffer, int radix)
 {
