@@ -332,7 +332,7 @@ static Fvector PT [5] = {
 	u32 cc;
 	string16 buff;
 	xr_sprintf(buff,"%03d_%03d_%03d_%03d",m_tLocations[0],m_tLocations[1],m_tLocations[2],m_tLocations[3]);
-	xr_map<shared_str, u32>::iterator it = fp_data.location_colors.find(buff);
+	typename xr_map<shared_str, u32>::iterator it = fp_data.location_colors.find(buff);
 	if(it==fp_data.location_colors.end())
 	{
 		it = fp_data.location_colors.find("default");
@@ -1961,7 +1961,7 @@ void CSE_ALifeCar::data_save(NET_Packet& tNetPacket)
 	tNetPacket.w_vec3(o_Angle);
 	{
 		tNetPacket.w_u16(u16(door_states.size()));
-		xr_vector<SDoorState>::iterator i = door_states.begin(), e = door_states.end();
+		typename xr_vector<SDoorState>::iterator i = door_states.begin(), e = door_states.end();
 		for (; e != i; ++i)
 		{
 			i->write(tNetPacket);
@@ -1970,7 +1970,7 @@ void CSE_ALifeCar::data_save(NET_Packet& tNetPacket)
 	}
 	{
 		tNetPacket.w_u16(u16(wheel_states.size()));
-		xr_vector<SWheelState>::iterator i = wheel_states.begin(), e = wheel_states.end();
+		typename xr_vector<SWheelState>::iterator i = wheel_states.begin(), e = wheel_states.end();
 		for (; e != i; ++i)
 		{
 			i->write(tNetPacket);

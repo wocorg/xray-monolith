@@ -11,20 +11,20 @@
 
 namespace MonsterSpace
 {
-	enum EBodyState;
-	enum EMovementType;
-	enum EMentalState;
-	enum EPathType;
+	enum EBodyState XR_FWD_ENUM_U32;
+	enum EMovementType XR_FWD_ENUM_INT;
+	enum EMentalState XR_FWD_ENUM_INT;
+	enum EPathType XR_FWD_ENUM_U32;
 };
 
 namespace MovementManager
 {
-	enum EPathType;
+	enum EPathType XR_FWD_ENUM_U32;
 };
 
 namespace DetailPathManager
 {
-	enum EDetailPathType;
+	enum EDetailPathType XR_FWD_ENUM_INT;
 };
 
 namespace smart_cover

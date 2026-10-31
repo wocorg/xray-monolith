@@ -82,11 +82,11 @@ bool CUITextureMaster::IsSh(const shared_str& texture_name)
 void CUITextureMaster::InitTexture(const shared_str& texture_name, const shared_str& shader_name, ui_shader& out_shader,
                                    Frect& out_rect)
 {
-	xr_map<shared_str, TEX_INFO>::iterator it = m_textures.find(texture_name);
+	typename xr_map<shared_str, TEX_INFO>::iterator it = m_textures.find(texture_name);
 	if (it != m_textures.end())
 	{
 		sh_pair p = {it->second.file, shader_name};
-		xr_map<sh_pair, ui_shader>::iterator sh_it = m_shaders.find(p);
+		typename xr_map<sh_pair, ui_shader>::iterator sh_it = m_shaders.find(p);
 		if (sh_it == m_shaders.end())
 			m_shaders[p]->create(shader_name.c_str(), it->second.file.c_str());
 
@@ -99,11 +99,11 @@ void CUITextureMaster::InitTexture(const shared_str& texture_name, const shared_
 
 void CUITextureMaster::InitTexture(const shared_str& texture_name, CUIStaticItem* tc, const shared_str& shader_name)
 {
-	xr_map<shared_str, TEX_INFO>::iterator it = m_textures.find(texture_name);
+	typename xr_map<shared_str, TEX_INFO>::iterator it = m_textures.find(texture_name);
 	if (it != m_textures.end())
 	{
 		sh_pair p = {it->second.file, shader_name};
-		xr_map<sh_pair, ui_shader>::iterator sh_it = m_shaders.find(p);
+		typename xr_map<sh_pair, ui_shader>::iterator sh_it = m_shaders.find(p);
 		if (sh_it == m_shaders.end())
 			m_shaders[p]->create(shader_name.c_str(), it->second.file.c_str());
 
@@ -135,7 +135,7 @@ float CUITextureMaster::GetTextureWidth(const shared_str& texture_name)
 
 TEX_INFO CUITextureMaster::FindItem(const shared_str& texture_name)
 {
-	xr_map<shared_str, TEX_INFO>::iterator it;
+	typename xr_map<shared_str, TEX_INFO>::iterator it;
 	it = m_textures.find(texture_name);
 
 	if (it != m_textures.end())
@@ -148,7 +148,7 @@ TEX_INFO CUITextureMaster::FindItem(const shared_str& texture_name)
 
 void CUITextureMaster::GetTextureShader(const shared_str& texture_name, ui_shader& sh)
 {
-	xr_map<shared_str, TEX_INFO>::iterator it;
+	typename xr_map<shared_str, TEX_INFO>::iterator it;
 	it = m_textures.find(texture_name);
 
 	R_ASSERT3(it != m_textures.end(), "can't find texture", texture_name.c_str());

@@ -15,8 +15,8 @@ class CCoverPoint;
 
 namespace MonsterSpace
 {
-	enum EBodyState;
-	enum EMovementType;
+	enum EBodyState XR_FWD_ENUM_U32;
+	enum EMovementType XR_FWD_ENUM_INT;
 }
 
 //////////////////////////////////////////////////////////////////////////

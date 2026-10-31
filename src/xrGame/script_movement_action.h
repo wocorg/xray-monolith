@@ -13,21 +13,21 @@
 
 namespace DetailPathManager
 {
-	enum EDetailPathType;
+	enum EDetailPathType XR_FWD_ENUM_INT;
 };
 
 namespace MonsterSpace
 {
-	enum EBodyState;
-	enum EMovementType;
-	enum EScriptMonsterMoveAction;
-	enum EScriptMonsterSpeedParam;
+	enum EBodyState XR_FWD_ENUM_U32;
+	enum EMovementType XR_FWD_ENUM_INT;
+	enum EScriptMonsterMoveAction XR_FWD_ENUM_INT;
+	enum EScriptMonsterSpeedParam XR_FWD_ENUM_U32;
 };
 
 namespace PatrolPathManager
 {
-	enum EPatrolStartType;
-	enum EPatrolRouteType;
+	enum EPatrolStartType XR_FWD_ENUM_U32;
+	enum EPatrolRouteType XR_FWD_ENUM_U32;
 };
 
 class CPatrolPath;

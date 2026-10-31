@@ -9,7 +9,7 @@
 #ifndef ai_soundsH
 #define ai_soundsH
 
-enum ESoundTypes
+enum ESoundTypes XR_FWD_ENUM_INT
 {
 	SOUND_TYPE_NO_SOUND = 0x00000000ui32,
 

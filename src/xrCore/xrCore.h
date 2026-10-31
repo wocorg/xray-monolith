@@ -112,6 +112,18 @@
 #define __inline inline
 #define IC inline
 #define ICF __forceinline // !!! this should be used only in critical places found by PROFILER
+
+// Enums that are forward-declared need a fixed underlying type in standard C++.
+// MSVC lets them be forward-declared without one (its enums are always int), so
+// there the macros stay empty and nothing changes. _U32 is for enums holding
+// u32(-1)-style values that don't fit in int.
+#ifdef _MSC_VER
+# define XR_FWD_ENUM_INT
+# define XR_FWD_ENUM_U32
+#else
+# define XR_FWD_ENUM_INT : int
+# define XR_FWD_ENUM_U32 : u32
+#endif
 #ifdef _EDITOR
 # define ICN
 #elif defined(_MSC_VER)

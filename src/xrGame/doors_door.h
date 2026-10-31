@@ -14,7 +14,7 @@ class CPhysicObject;
 namespace doors
 {
 	class actor;
-	enum door_state;
+	enum door_state XR_FWD_ENUM_INT;
 
 	class door : private xray::noncopyable
 	{

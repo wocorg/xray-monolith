@@ -17,7 +17,7 @@ namespace text_editor
 
 	class base;
 
-	enum key_state // Flags32
+	enum key_state XR_FWD_ENUM_U32 // Flags32
 	{
 		ks_free = u32(0),
 		ks_LShift = u32(1) << 0,
@@ -38,7 +38,7 @@ namespace text_editor
 		ks_force = u32(-1)
 	}; // enum key_state
 
-	enum init_mode
+	enum init_mode XR_FWD_ENUM_INT
 	{
 		im_standart = 0,
 		im_number_only,

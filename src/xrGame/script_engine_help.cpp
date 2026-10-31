@@ -86,7 +86,7 @@ xr_string member_to_string			(::luabind::object const& e, LPCSTR function_signat
 			detail::stack_pop p2(L, 1);
 			detail::method_rep* m = static_cast<detail::method_rep*>(lua_touserdata(L, -1));
 
-			for (std::vector<detail::overload_rep>::const_iterator i = m->overloads().begin();
+			for (typename std::vector<detail::overload_rep>::const_iterator i = m->overloads().begin();
 				i != m->overloads().end(); ++i)
 			{
 				::luabind::internal_string str;
@@ -233,8 +233,8 @@ void print_free_functions				(lua_State *L, const ::luabind::object &object, LPC
 							Msg("\n%snamespace %s {",indent.c_str(),header);
 						++count;
 						rep = static_cast<::luabind::detail::free_functions::function_rep*>(lua_touserdata(L, -1));
-						std::vector<::luabind::detail::free_functions::overload_rep>::const_iterator	i = rep->overloads().begin();
-						std::vector<::luabind::detail::free_functions::overload_rep>::const_iterator	e = rep->overloads().end();
+						typename std::vector<::luabind::detail::free_functions::overload_rep>::const_iterator	i = rep->overloads().begin();
+						typename std::vector<::luabind::detail::free_functions::overload_rep>::const_iterator	e = rep->overloads().end();
 						for ( ; i != e; ++i) {
 							::luabind::internal_string luaS;
 							(*i).get_signature(L,luaS);

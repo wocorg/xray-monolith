@@ -16,7 +16,7 @@ class CALifeMonsterPatrolPathManager;
 
 namespace MovementManager
 {
-	enum EPathType;
+	enum EPathType XR_FWD_ENUM_U32;
 };
 
 class CALifeMonsterMovementManager

@@ -162,7 +162,7 @@ void xrServer::client_Destroy(IClient* C)
 
 		DelayedPacket pp;
 		pp.SenderID = alife_client->ID;
-		xr_deque<DelayedPacket>::iterator it;
+		typename xr_deque<DelayedPacket>::iterator it;
 		do
 		{
 			it = std::find(m_aDelayedPackets.begin(), m_aDelayedPackets.end(), pp);
@@ -1013,8 +1013,8 @@ void xrServer::verify_entity				(const CSE_Abstract *entity) const
 		VERIFY3							(std::find((*J).second->children.begin(),(*J).second->children.end(),entity->ID) != (*J).second->children.end(),"SERVER : Parent/Children relationship mismatch - Object has parent, but corresponding parent doesn't have children",(*J).second->name_replace());
 	}
 
-	xr_vector<u16>::const_iterator		I = entity->children.begin();
-	xr_vector<u16>::const_iterator		E = entity->children.end();
+	typename xr_vector<u16>::const_iterator		I = entity->children.begin();
+	typename xr_vector<u16>::const_iterator		E = entity->children.end();
 	for ( ; I != E; ++I) {
 		VERIFY3							(*I != 0xffff,"SERVER : Invalid entity children id - 0xffff",entity->name_replace());
 		xrS_entities::const_iterator	J = entities.find(*I);

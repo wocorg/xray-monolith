@@ -297,7 +297,7 @@ void item_respawn_manager::check_to_delete(u16 item_id)
 		temp_iter->last_spawn_time = Level().timeServer();
 	}
 
-	xr_set<u16>::iterator temp_li_iter = level_items_respawn.find(item_id);
+	typename xr_set<u16>::iterator temp_li_iter = level_items_respawn.find(item_id);
 	if (temp_li_iter != level_items_respawn.end())
 	{
 		level_items_respawn.erase(temp_li_iter);
@@ -348,8 +348,8 @@ u16 item_respawn_manager::respawn_item(CSE_Abstract* item_object)
 
 void item_respawn_manager::clear_level_items()
 {
-	xr_set<u16>::iterator ie = level_items_respawn.end();
-	for (xr_set<u16>::iterator i = level_items_respawn.begin(); i != ie; ++i)
+	typename xr_set<u16>::iterator ie = level_items_respawn.end();
+	for (typename xr_set<u16>::iterator i = level_items_respawn.begin(); i != ie; ++i)
 	{
 		CSE_Abstract* entity = m_server->ID_to_entity(*i);
 		if (!entity)

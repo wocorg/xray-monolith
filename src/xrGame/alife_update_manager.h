@@ -14,7 +14,7 @@
 
 namespace RestrictionSpace
 {
-	enum ERestrictorTypes;
+	enum ERestrictorTypes XR_FWD_ENUM_INT;
 }
 
 class CALifeUpdateManager :

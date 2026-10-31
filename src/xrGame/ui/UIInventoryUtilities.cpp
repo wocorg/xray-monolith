@@ -137,7 +137,7 @@ bool InventoryUtilities::FreeRoom_inBelt(TIItemContainer& item_list, PIItem _ite
 
 	found_place = true;
 
-	for (xr_vector<PIItem>::iterator it = item_list.begin(); (item_list.end() != it) && found_place; ++it)
+	for (typename xr_vector<PIItem>::iterator it = item_list.begin(); (item_list.end() != it) && found_place; ++it)
 	{
 		PIItem pItem = *it;
 		Ivector2 iWH = pItem->GetInvGridRect().rb;
@@ -215,7 +215,7 @@ const ui_shader& InventoryUtilities::GetEquipmentIconsShader()
 
 ui_shader& InventoryUtilities::GetCustomIconTextureShader(LPCSTR name)
 {
-	xr_map<LPCSTR, ui_shader*>::iterator it = g_CustomIconShaders.find(name);
+	typename xr_map<LPCSTR, ui_shader*>::iterator it = g_CustomIconShaders.find(name);
 
 	if (it != g_CustomIconShaders.end())
 		return *(it)->second;

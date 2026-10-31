@@ -10,7 +10,7 @@
 
 namespace ObjectHandlerSpace
 {
-	enum EWorldProperties
+	enum EWorldProperties XR_FWD_ENUM_U32
 	{
 		eWorldPropertyItemID = u32(0),
 		eWorldPropertyHidden,

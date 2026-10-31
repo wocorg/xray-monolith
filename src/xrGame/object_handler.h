@@ -13,7 +13,7 @@
 
 namespace MonsterSpace
 {
-	enum EObjectAction;
+	enum EObjectAction XR_FWD_ENUM_U32;
 }
 
 class CAI_Stalker;

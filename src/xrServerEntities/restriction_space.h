@@ -24,7 +24,7 @@ namespace RestrictionSpace
 		}
 	};
 
-	enum ERestrictorTypes
+	enum ERestrictorTypes XR_FWD_ENUM_INT
 	{
 		eDefaultRestrictorTypeNone = u8(0),
 		eDefaultRestrictorTypeOut = u8(1),

@@ -10,7 +10,7 @@
 
 namespace SightManager
 {
-	enum ESightType
+	enum ESightType XR_FWD_ENUM_U32
 	{
 		eSightTypeCurrentDirection = u32(0),
 		eSightTypePathDirection,

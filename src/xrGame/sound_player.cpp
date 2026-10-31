@@ -39,8 +39,8 @@ void CSoundPlayer::clear()
 {
 	m_sounds.clear();
 
-	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
+	typename xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
+	typename xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
 		(*I).destroy();
 
@@ -114,8 +114,8 @@ bool CSoundPlayer::check_sound_legacy(u32 internal_type) const
 	if (sound.m_synchro_mask & m_sound_mask)
 		return (false);
 
-	xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
+	typename xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
+	typename xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
 		if ((*I).m_synchro_mask & sound.m_synchro_mask)
 			if ((*I).m_priority <= sound.m_priority)
@@ -145,8 +145,8 @@ void CSoundPlayer::remove_inappropriate_sounds(u32 sound_mask)
 
 void CSoundPlayer::update_playing_sounds()
 {
-	xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
+	typename xr_vector<CSoundSingle>::iterator I = m_playing_sounds.begin();
+	typename xr_vector<CSoundSingle>::iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
 	{
 		if ((*I).m_sound->_feedback())
@@ -158,8 +158,8 @@ void CSoundPlayer::update_playing_sounds()
 
 bool CSoundPlayer::need_bone_data() const
 {
-	xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
+	typename xr_vector<CSoundSingle>::const_iterator I = m_playing_sounds.begin();
+	typename xr_vector<CSoundSingle>::const_iterator E = m_playing_sounds.end();
 	for (; I != E; ++I)
 	{
 		if ((*I).m_sound->_feedback())
@@ -301,8 +301,8 @@ CSoundPlayer::CSoundCollection::CSoundCollection(const CSoundCollectionParams& p
 CSoundPlayer::CSoundCollection::~CSoundCollection()
 {
 #ifdef DEBUG
-	xr_vector<ref_sound*>::iterator	I = m_sounds.begin();
-	xr_vector<ref_sound*>::iterator	E = m_sounds.end();
+	typename xr_vector<ref_sound*>::iterator	I = m_sounds.begin();
+	typename xr_vector<ref_sound*>::iterator	E = m_sounds.end();
 	for ( ; I != E; ++I) {
 		VERIFY						(*I);
 		VERIFY						(!(*I)->_feedback());

@@ -112,6 +112,9 @@ add_library(xrEngine STATIC
 file(GLOB XRENGINE_DISCORD_SOURCES "${XRAY_SRC_DIR}/3rd party/discord/*.cpp")
 set_source_files_properties(${XRENGINE_DISCORD_SOURCES} PROPERTIES HEADER_FILE_ONLY ON)
 
+# DirectInput/XInput input implementation; TODO(macos-port): SDL-based input
+set_source_files_properties(Xr_input.cpp xr_input_xinput.cpp PROPERTIES HEADER_FILE_ONLY ON)
+
 target_compile_options(xrEngine PUBLIC "-iquote${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(xrEngine PRIVATE
 	"${XRAY_SRC_DIR}/3rd party/imgui"

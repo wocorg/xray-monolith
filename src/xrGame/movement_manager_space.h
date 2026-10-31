@@ -10,7 +10,7 @@
 
 namespace MovementManager
 {
-	enum EPathType
+	enum EPathType XR_FWD_ENUM_U32
 	{
 		ePathTypeGamePath = u32(0),
 		ePathTypeLevelPath,

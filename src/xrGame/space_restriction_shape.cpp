@@ -110,8 +110,8 @@ void CSpaceRestrictionShape::build_border()
 	m_border.clear();
 	CCF_Shape* shape = smart_cast<CCF_Shape*>(m_restrictor->collidable.model);
 	VERIFY(shape);
-	xr_vector<CCF_Shape::shape_def>::const_iterator I = shape->Shapes().begin();
-	xr_vector<CCF_Shape::shape_def>::const_iterator E = shape->Shapes().end();
+	typename xr_vector<CCF_Shape::shape_def>::const_iterator I = shape->Shapes().begin();
+	typename xr_vector<CCF_Shape::shape_def>::const_iterator E = shape->Shapes().end();
 	for (; I != E; ++I)
 		fill_shape(*I);
 

@@ -151,7 +151,7 @@ public:
 
 
 public:
-	enum EMentalState
+	enum EMentalState XR_FWD_ENUM_INT
 	{
 		eStateIdle,
 		eStateDanger

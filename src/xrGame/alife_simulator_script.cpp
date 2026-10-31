@@ -435,8 +435,8 @@ void IterateInfo(const CALifeSimulator* alife, const ALife::_OBJECT_ID& id, cons
 	if (!known_info)
 		return;
 
-	xr_vector<shared_str>::const_iterator I = known_info->begin();
-	xr_vector<shared_str>::const_iterator E = known_info->end();
+	typename xr_vector<shared_str>::const_iterator I = known_info->begin();
+	typename xr_vector<shared_str>::const_iterator E = known_info->end();
 	for (; I != E; ++I)
 		functor(id, (LPCSTR)(*I).c_str());
 }

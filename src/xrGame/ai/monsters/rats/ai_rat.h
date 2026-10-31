@@ -18,7 +18,7 @@
 
 class CBlend;
 class CPatrolPath;
-enum ESoundTypes;
+enum ESoundTypes XR_FWD_ENUM_INT;
 class rat_state_manager;
 
 namespace steering_behaviour

@@ -43,9 +43,9 @@
 #include "searchlight.h"
 #endif
 
-enum EPdaMsg;
-enum ESoundTypes;
-enum ETaskState;
+enum EPdaMsg XR_FWD_ENUM_INT;
+enum ESoundTypes XR_FWD_ENUM_INT;
+enum ETaskState XR_FWD_ENUM_INT;
 
 namespace ALife { enum ERelationType; }
 namespace ScriptEntity { enum EActionType; }
@@ -59,8 +59,8 @@ class NET_Packet;
 class CGameTask;
 
 namespace PatrolPathManager {
-	enum EPatrolStartType;
-	enum EPatrolRouteType;
+	enum EPatrolStartType XR_FWD_ENUM_U32;
+	enum EPatrolRouteType XR_FWD_ENUM_U32;
 };
 
 namespace MemorySpace {
@@ -72,25 +72,25 @@ namespace MemorySpace {
 };
 
 namespace MonsterSpace {
-	enum EBodyState;
-	enum EMovementType;
-	enum EMovementDirection;
-	enum EDirectionType;
-	enum EPathState;
-	enum EObjectAction;
-	enum EMentalState;
-	enum EScriptMonsterMoveAction;
-	enum EScriptMonsterSpeedParam;
-	enum EScriptMonsterAnimAction;
-	enum EScriptMonsterGlobalAction;
-	enum EScriptSoundAnim;
-	enum EMonsterSounds;
-	enum EMonsterHeadAnimType;
+	enum EBodyState XR_FWD_ENUM_U32;
+	enum EMovementType XR_FWD_ENUM_INT;
+	enum EMovementDirection XR_FWD_ENUM_INT;
+	enum EDirectionType XR_FWD_ENUM_INT;
+	enum EPathState XR_FWD_ENUM_U32;
+	enum EObjectAction XR_FWD_ENUM_U32;
+	enum EMentalState XR_FWD_ENUM_INT;
+	enum EScriptMonsterMoveAction XR_FWD_ENUM_INT;
+	enum EScriptMonsterSpeedParam XR_FWD_ENUM_U32;
+	enum EScriptMonsterAnimAction XR_FWD_ENUM_U32;
+	enum EScriptMonsterGlobalAction XR_FWD_ENUM_U32;
+	enum EScriptSoundAnim XR_FWD_ENUM_INT;
+	enum EMonsterSounds XR_FWD_ENUM_INT;
+	enum EMonsterHeadAnimType XR_FWD_ENUM_U32;
 	struct SBoneRotation;
 };
 
 namespace GameObject {
-	enum ECallbackType;
+	enum ECallbackType XR_FWD_ENUM_U32;
 };
 
 class CGameObject;
@@ -157,7 +157,7 @@ class CScriptGameObject;
 
 namespace SightManager
 {
-	enum ESightType;
+	enum ESightType XR_FWD_ENUM_U32;
 }
 
 struct CSightParams

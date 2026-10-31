@@ -3,7 +3,7 @@
 
 namespace UIMapWndActionsSpace
 {
-	enum EWorldProperties
+	enum EWorldProperties XR_FWD_ENUM_U32
 	{
 		ePropTargetMapShown,
 		ePropMapMinimized,

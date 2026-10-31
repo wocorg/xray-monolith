@@ -15,12 +15,12 @@
 
 namespace MovementManager
 {
-	enum EPathType;
+	enum EPathType XR_FWD_ENUM_U32;
 };
 
 namespace DetailPathManager
 {
-	enum EDetailPathType;
+	enum EDetailPathType XR_FWD_ENUM_INT;
 };
 
 template <
@@ -131,7 +131,7 @@ protected:
 	> CLevelPathManager;
 
 private:
-	enum EPathState
+	enum EPathState XR_FWD_ENUM_U32
 	{
 		ePathStateSelectGameVertex = u32(0),
 		ePathStateBuildGamePath,

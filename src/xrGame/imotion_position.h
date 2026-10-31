@@ -3,7 +3,7 @@
 #include "interactive_motion.h"
 #include "../Include/xrRender/Kinematics.h"
 class imotion_position;
-enum motion_history_state;
+enum motion_history_state XR_FWD_ENUM_INT;
 
 class imotion_position :
 	public interactive_motion

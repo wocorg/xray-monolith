@@ -320,7 +320,7 @@ void CWeaponStatMgun::SStmAnimWeapon::LaunchMagazine(CObject *O)
 	vel.normalize_safe().mul(m_magazine_vel);
 	mag->SetLaunchParams(xfm, vel, Fvector().set(0, 0, 0));
 
-	xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_object.begin(), m_magazine_object.end(), mag);
+	typename xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_object.begin(), m_magazine_object.end(), mag);
 	VERIFY(I != m_magazine_object.end());
 	m_magazine_object.erase(I);
 	m_magazine_launch.push_back(mag);
@@ -344,7 +344,7 @@ void CWeaponStatMgun::SStmAnimWeapon::DetachMagazine(u16 id)
 	CCustomRocket *mag = smart_cast<CCustomRocket *>(Level().Objects.net_Find(id));
 	VERIFY2(mag, m_stm->cNameSect_str());
 	{
-		xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_object.begin(), m_magazine_object.end(), mag);
+		typename xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_object.begin(), m_magazine_object.end(), mag);
 		if (I != m_magazine_object.end())
 		{
 			(*I)->H_SetParent(nullptr);
@@ -352,7 +352,7 @@ void CWeaponStatMgun::SStmAnimWeapon::DetachMagazine(u16 id)
 		}
 	}
 	{
-		xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_launch.begin(), m_magazine_launch.end(), mag);
+		typename xr_vector<CCustomRocket *>::iterator I = std::find(m_magazine_launch.begin(), m_magazine_launch.end(), mag);
 		if (I != m_magazine_launch.end())
 		{
 			(*I)->H_SetParent(nullptr);

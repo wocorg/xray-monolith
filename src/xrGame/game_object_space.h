@@ -2,7 +2,7 @@
 
 namespace GameObject
 {
-	enum ECallbackType
+	enum ECallbackType XR_FWD_ENUM_U32
 	{
 		eTradeStart = u32(0),
 		eTradeStop,

@@ -6,7 +6,7 @@ class CAI_Trader;
 
 namespace MonsterSpace
 {
-	enum EMonsterHeadAnimType;
+	enum EMonsterHeadAnimType XR_FWD_ENUM_U32;
 };
 
 class CTraderAnimation

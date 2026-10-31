@@ -84,7 +84,7 @@ namespace StalkerSpace
 		eStalkerSoundMaskDummy = u32(-1),
 	};
 
-	enum EBodyAction
+	enum EBodyAction XR_FWD_ENUM_U32
 	{
 		eBodyActionNone = u32(0),
 		eBodyActionHello,

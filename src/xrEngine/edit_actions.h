@@ -12,7 +12,7 @@
 
 namespace text_editor
 {
-	enum key_state;
+	enum key_state XR_FWD_ENUM_U32;
 	class line_edit_control;
 
 	class base : private xray::noncopyable

@@ -10,7 +10,7 @@
 
 namespace PatrolPathManager
 {
-	enum EPatrolStartType
+	enum EPatrolStartType XR_FWD_ENUM_U32
 	{
 		ePatrolStartTypeFirst = u32(0),
 		ePatrolStartTypeLast,
@@ -20,7 +20,7 @@ namespace PatrolPathManager
 		ePatrolStartTypeDummy = u32(-1),
 	};
 
-	enum EPatrolRouteType
+	enum EPatrolRouteType XR_FWD_ENUM_U32
 	{
 		ePatrolRouteTypeStop = u32(0),
 		ePatrolRouteTypeContinue,

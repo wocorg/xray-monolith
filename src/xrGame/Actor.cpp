@@ -1151,7 +1151,7 @@ void CActor::UpdateCL()
 
 	if (m_feel_touch_characters > 0)
 	{
-		for (xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
+		for (typename xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 		{
 			CPhysicsShellHolder* sh = smart_cast<CPhysicsShellHolder*>(*it);
 			if (sh && sh->character_physics_support())
@@ -2157,7 +2157,7 @@ void CActor::SetVisibilityFromObject(u16 who_id, float value)
 {
     clamp(value, 0.f, 1.f);
 
-    xr_vector<npc_visibility>::iterator it = std::find(m_npc_visibility.begin(),
+    typename xr_vector<npc_visibility>::iterator it = std::find(m_npc_visibility.begin(),
         m_npc_visibility.end(),
         who_id);
 

@@ -573,8 +573,8 @@ void CHudItem::UpdateCL()
                     
                 }
 
-				xr_vector<motion_marks>::const_iterator it = marks.begin();
-				xr_vector<motion_marks>::const_iterator it_e = marks.end();
+				typename xr_vector<motion_marks>::const_iterator it = marks.begin();
+				typename xr_vector<motion_marks>::const_iterator it_e = marks.end();
 				for (; it != it_e; ++it)
 				{
 					const motion_marks& M = (*it);

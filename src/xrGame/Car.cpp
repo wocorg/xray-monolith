@@ -413,7 +413,7 @@ void CCar::SaveNetState(NET_Packet& P)
 	XFORM().getXYZ(Angle);
 	P.w_vec3(Angle);
 	{
-		xr_map<u16, SDoor>::iterator i, e;
+		typename xr_map<u16, SDoor>::iterator i, e;
 		i = m_doors.begin();
 		e = m_doors.end();
 		P.w_u16(u16(m_doors.size()));
@@ -422,7 +422,7 @@ void CCar::SaveNetState(NET_Packet& P)
 	}
 
 	{
-		xr_map<u16, SWheel>::iterator i, e;
+		typename xr_map<u16, SWheel>::iterator i, e;
 		i = m_wheels_map.begin();
 		e = m_wheels_map.end();
 		P.w_u16(u16(m_wheels_map.size()));
@@ -441,8 +441,8 @@ void CCar::RestoreNetState(CSE_PHSkeleton* po)
 	CSE_ALifeCar* co = smart_cast<CSE_ALifeCar*>(po);
 
 	{
-		xr_map<u16, SDoor>::iterator i, e;
-		xr_vector<CSE_ALifeCar::SDoorState>::iterator ii = co->door_states.begin();
+		typename xr_map<u16, SDoor>::iterator i, e;
+		typename xr_vector<CSE_ALifeCar::SDoorState>::iterator ii = co->door_states.begin();
 		i = m_doors.begin();
 		e = m_doors.end();
 		for (; i != e; ++i, ++ii)
@@ -451,8 +451,8 @@ void CCar::RestoreNetState(CSE_PHSkeleton* po)
 		}
 	}
 	{
-		xr_map<u16, SWheel>::iterator i, e;
-		xr_vector<CSE_ALifeCar::SWheelState>::iterator ii = co->wheel_states.begin();
+		typename xr_map<u16, SWheel>::iterator i, e;
+		typename xr_vector<CSE_ALifeCar::SWheelState>::iterator ii = co->wheel_states.begin();
 		i = m_wheels_map.begin();
 		e = m_wheels_map.end();
 		for (; i != e; ++i, ++ii)
@@ -506,7 +506,7 @@ void CCar::RestoreNetState(CSE_PHSkeleton* po)
 void CCar::SetDefaultNetState(CSE_PHSkeleton* po)
 {
 	if (po->_flags.test(CSE_PHSkeleton::flSavedData))return;
-	xr_map<u16, SDoor>::iterator i, e;
+	typename xr_map<u16, SDoor>::iterator i, e;
 	i = m_doors.begin();
 	e = m_doors.end();
 	for (; i != e; ++i)
@@ -864,7 +864,7 @@ bool CCar::is_Door(u16 id, xr_map<u16, SDoor>::iterator& i)
 
 bool CCar::is_Door(u16 id)
 {
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 	i = m_doors.find(id);
 	if (i == m_doors.end())
 	{
@@ -875,7 +875,7 @@ bool CCar::is_Door(u16 id)
 
 bool CCar::Enter(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
 {
-	xr_map<u16, SDoor>::iterator i, e;
+	typename xr_map<u16, SDoor>::iterator i, e;
 
 	i = m_doors.begin();
 	e = m_doors.end();
@@ -891,7 +891,7 @@ bool CCar::Enter(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos
 
 bool CCar::Exit(const Fvector& pos, const Fvector& dir)
 {
-	xr_map<u16, SDoor>::iterator i, e;
+	typename xr_map<u16, SDoor>::iterator i, e;
 
 	i = m_doors.begin();
 	e = m_doors.end();
@@ -1091,7 +1091,7 @@ void CCar::Init()
 	float l_time_to_explosion = READ_IF_EXISTS(ini, r_float, "car_definition", "time_to_explosion", 120.f);
 	CDelayedActionFuse::Initialize(l_time_to_explosion, CDamagableItem::DamageLevelToHealth(2));
 	{
-		xr_map<u16, SWheel>::iterator i, e;
+		typename xr_map<u16, SWheel>::iterator i, e;
 		i = m_wheels_map.begin();
 		e = m_wheels_map.end();
 		for (; i != e; ++i)
@@ -1102,7 +1102,7 @@ void CCar::Init()
 	}
 
 	{
-		xr_vector<SWheelDrive>::iterator i, e;
+		typename xr_vector<SWheelDrive>::iterator i, e;
 		i = m_driving_wheels.begin();
 		e = m_driving_wheels.end();
 		for (; i != e; ++i)
@@ -1110,7 +1110,7 @@ void CCar::Init()
 	}
 
 	{
-		xr_vector<SWheelBreak>::iterator i, e;
+		typename xr_vector<SWheelBreak>::iterator i, e;
 		i = m_breaking_wheels.begin();
 		e = m_breaking_wheels.end();
 		for (; i != e; ++i)
@@ -1118,7 +1118,7 @@ void CCar::Init()
 	}
 
 	{
-		xr_vector<SWheelSteer>::iterator i, e;
+		typename xr_vector<SWheelSteer>::iterator i, e;
 		i = m_steering_wheels.begin();
 		e = m_steering_wheels.end();
 		for (; i != e; ++i)
@@ -1126,7 +1126,7 @@ void CCar::Init()
 	}
 
 	{
-		xr_vector<SExhaust>::iterator i, e;
+		typename xr_vector<SExhaust>::iterator i, e;
 		i = m_exhausts.begin();
 		e = m_exhausts.end();
 		for (; i != e; ++i)
@@ -1134,7 +1134,7 @@ void CCar::Init()
 	}
 
 	{
-		xr_map<u16, SDoor>::iterator i, e;
+		typename xr_map<u16, SDoor>::iterator i, e;
 		i = m_doors.begin();
 		e = m_doors.end();
 		for (; i != e; ++i)
@@ -1152,13 +1152,13 @@ void CCar::Init()
 			const CInifile::Item& item = *I;
 			u16 index = pKinematics->LL_BoneID(*item.first);
 			R_ASSERT3(index != BI_NONE, "Wrong bone name", *item.first);
-			xr_map<u16, SWheel>::iterator i = m_wheels_map.find(index);
+			typename xr_map<u16, SWheel>::iterator i = m_wheels_map.find(index);
 
 			if (i != m_wheels_map.end())
 				i->second.CDamagableHealthItem::Init(float(atof(*item.second)), 2);
 			else
 			{
-				xr_map<u16, SDoor>::iterator i = m_doors.find(index);
+				typename xr_map<u16, SDoor>::iterator i = m_doors.find(index);
 				R_ASSERT3(i!=m_doors.end(), "only wheel and doors bones allowed for damage defs", *item.first);
 				i->second.CDamagableHealthItem::Init(float(atof(*item.second)), 1);
 			}
@@ -1184,7 +1184,7 @@ void CCar::Revert()
 
 void CCar::NeutralDrive()
 {
-	xr_vector<SWheelDrive>::iterator i, e;
+	typename xr_vector<SWheelDrive>::iterator i, e;
 	i = m_driving_wheels.begin();
 	e = m_driving_wheels.end();
 	for (; i != e; ++i)
@@ -1194,7 +1194,7 @@ void CCar::NeutralDrive()
 
 void CCar::ReleaseHandBreak()
 {
-	xr_vector<SWheelBreak>::iterator i, e;
+	typename xr_vector<SWheelBreak>::iterator i, e;
 	i = m_breaking_wheels.begin();
 	e = m_breaking_wheels.end();
 	for (; i != e; ++i)
@@ -1209,7 +1209,7 @@ void CCar::Drive()
 	m_pPhysicsShell->Enable();
 	m_current_rpm = EngineDriveSpeed();
 	m_current_engine_power = EnginePower();
-	xr_vector<SWheelDrive>::iterator i, e;
+	typename xr_vector<SWheelDrive>::iterator i, e;
 	i = m_driving_wheels.begin();
 	e = m_driving_wheels.end();
 	for (; i != e; ++i)
@@ -1292,7 +1292,7 @@ void CCar::UpdatePower()
 		if (m_current_rpm > m_gear_ratious[CurrentTransmission()][2]) TransmissionUp();
 	}
 
-	xr_vector<SWheelDrive>::iterator i, e;
+	typename xr_vector<SWheelDrive>::iterator i, e;
 	i = m_driving_wheels.begin();
 	e = m_driving_wheels.end();
 	for (; i != e; ++i)
@@ -1303,7 +1303,7 @@ void CCar::SteerRight()
 {
 	b_wheels_limited = true; //no need to limit wheels when stiring
 	m_pPhysicsShell->Enable();
-	xr_vector<SWheelSteer>::iterator i, e;
+	typename xr_vector<SWheelSteer>::iterator i, e;
 	i = m_steering_wheels.begin();
 	e = m_steering_wheels.end();
 	for (; i != e; ++i)
@@ -1315,7 +1315,7 @@ void CCar::SteerLeft()
 {
 	b_wheels_limited = true; //no need to limit wheels when stiring
 	m_pPhysicsShell->Enable();
-	xr_vector<SWheelSteer>::iterator i, e;
+	typename xr_vector<SWheelSteer>::iterator i, e;
 	i = m_steering_wheels.begin();
 	e = m_steering_wheels.end();
 	for (; i != e; ++i)
@@ -1327,7 +1327,7 @@ void CCar::SteerIdle()
 {
 	b_wheels_limited = false;
 	m_pPhysicsShell->Enable();
-	xr_vector<SWheelSteer>::iterator i, e;
+	typename xr_vector<SWheelSteer>::iterator i, e;
 	i = m_steering_wheels.begin();
 	e = m_steering_wheels.end();
 	for (; i != e; ++i)
@@ -1346,7 +1346,7 @@ void CCar::SetSteer(float k)
 	}
 	b_wheels_limited = true;
 	m_pPhysicsShell->Enable();
-	xr_vector<SWheelSteer>::iterator i, e;
+	typename xr_vector<SWheelSteer>::iterator i, e;
 	i = m_steering_wheels.begin();
 	e = m_steering_wheels.end();
 	for (; i != e; ++i)
@@ -1358,7 +1358,7 @@ void CCar::LimitWheels()
 {
 	if (b_wheels_limited) return;
 	b_wheels_limited = true;
-	xr_vector<SWheelSteer>::iterator i, e;
+	typename xr_vector<SWheelSteer>::iterator i, e;
 	i = m_steering_wheels.begin();
 	e = m_steering_wheels.end();
 	for (; i != e; ++i)
@@ -1367,7 +1367,7 @@ void CCar::LimitWheels()
 
 void CCar::HandBreak()
 {
-	xr_vector<SWheelBreak>::iterator i, e;
+	typename xr_vector<SWheelBreak>::iterator i, e;
 	i = m_breaking_wheels.begin();
 	e = m_breaking_wheels.end();
 	for (; i != e; ++i)
@@ -1385,7 +1385,7 @@ void CCar::StartBreaking()
 
 void CCar::StopBreaking()
 {
-	xr_vector<SWheelBreak>::iterator i, e;
+	typename xr_vector<SWheelBreak>::iterator i, e;
 	i = m_breaking_wheels.begin();
 	e = m_breaking_wheels.end();
 	for (; i != e; ++i)
@@ -1632,7 +1632,7 @@ void CCar::UpdateBack()
 		{
 			k *= (time / m_break_time);
 		}
-		xr_vector<SWheelBreak>::iterator i, e;
+		typename xr_vector<SWheelBreak>::iterator i, e;
 		i = m_breaking_wheels.begin();
 		e = m_breaking_wheels.end();
 		for (; i != e; ++i)
@@ -1655,7 +1655,7 @@ void CCar::UpdateBack()
 
 void CCar::PlayExhausts()
 {
-	xr_vector<SExhaust>::iterator i, e;
+	typename xr_vector<SExhaust>::iterator i, e;
 	i = m_exhausts.begin();
 	e = m_exhausts.end();
 	for (; i != e; ++i)
@@ -1664,7 +1664,7 @@ void CCar::PlayExhausts()
 
 void CCar::StopExhausts()
 {
-	xr_vector<SExhaust>::iterator i, e;
+	typename xr_vector<SExhaust>::iterator i, e;
 	i = m_exhausts.begin();
 	e = m_exhausts.end();
 	for (; i != e; ++i)
@@ -1674,7 +1674,7 @@ void CCar::StopExhausts()
 void CCar::UpdateExhausts()
 {
 	if (!b_engine_on) return;
-	xr_vector<SExhaust>::iterator i, e;
+	typename xr_vector<SExhaust>::iterator i, e;
 	i = m_exhausts.begin();
 	e = m_exhausts.end();
 	for (; i != e; ++i)
@@ -1683,7 +1683,7 @@ void CCar::UpdateExhausts()
 
 void CCar::ClearExhausts()
 {
-	xr_vector<SExhaust>::iterator i, e;
+	typename xr_vector<SExhaust>::iterator i, e;
 	i = m_exhausts.begin();
 	e = m_exhausts.end();
 	for (; i != e; ++i)
@@ -1711,7 +1711,7 @@ bool CCar::Use(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
     }
 #endif
 
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 
 	if (!Owner())
 	{
@@ -1745,7 +1745,7 @@ bool CCar::Use(const Fvector& pos, const Fvector& dir, const Fvector& foot_pos)
 
 bool CCar::DoorUse(u16 id)
 {
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 	if (is_Door(id, i))
 	{
 		i->second.Use();
@@ -1759,7 +1759,7 @@ bool CCar::DoorUse(u16 id)
 
 bool CCar::DoorSwitch(u16 id)
 {
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 	if (is_Door(id, i))
 	{
 		i->second.Switch();
@@ -1773,7 +1773,7 @@ bool CCar::DoorSwitch(u16 id)
 
 bool CCar::DoorClose(u16 id)
 {
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 	if (is_Door(id, i))
 	{
 		i->second.Close();
@@ -1787,7 +1787,7 @@ bool CCar::DoorClose(u16 id)
 
 bool CCar::DoorOpen(u16 id)
 {
-	xr_map<u16, SDoor>::iterator i;
+	typename xr_map<u16, SDoor>::iterator i;
 	if (is_Door(id, i))
 	{
 		i->second.Open();
@@ -1850,7 +1850,7 @@ float CCar::EnginePower()
 
 float CCar::DriveWheelsMeanAngleRate()
 {
-	xr_vector<SWheelDrive>::iterator i, e;
+	typename xr_vector<SWheelDrive>::iterator i, e;
 	i = m_driving_wheels.begin();
 	e = m_driving_wheels.end();
 	float drive_speed = 0.f;
@@ -2256,7 +2256,7 @@ float CCar::GetWheelFriction()
 
 void CCar::SetWheelFriction(float mu_factor)
 {
-	xr_map<u16, SWheel>::iterator i = m_wheels_map.begin(), e = m_wheels_map.end();
+	typename xr_map<u16, SWheel>::iterator i = m_wheels_map.begin(), e = m_wheels_map.end();
 	for (; i != e; ++i)
 		i->second.collision_params.mu_factor = mu_factor;
 }

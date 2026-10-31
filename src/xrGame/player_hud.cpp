@@ -20,8 +20,8 @@ Fvector _wpn_root_pos;
 
 player_hud_motion* player_hud_motion_container::find_motion(const shared_str& name)
 {
-	xr_vector<player_hud_motion>::iterator it = m_anims.begin();
-	xr_vector<player_hud_motion>::iterator it_e = m_anims.end();
+	typename xr_vector<player_hud_motion>::iterator it = m_anims.begin();
+	typename xr_vector<player_hud_motion>::iterator it_e = m_anims.end();
 	for (; it != it_e; ++it)
 	{
 		const shared_str& s = (true) ? (*it).m_alias_name : (*it).m_base_name;

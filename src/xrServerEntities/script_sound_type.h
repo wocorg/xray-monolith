@@ -10,6 +10,6 @@
 
 #include "script_export_space.h"
 
-enum ESoundTypes;
+enum ESoundTypes XR_FWD_ENUM_INT;
 
 typedef enum_exporter<ESoundTypes> CScriptSoundType;

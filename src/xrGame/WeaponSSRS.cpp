@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "WeaponSSRS.h"
 
 extern BOOL g_launcher_dynamic_range_zoom;
@@ -90,7 +90,7 @@ void CWeaponSSRS::OnEvent(NET_Packet& P, u16 type)
 		{
 			P.r_u16(id);
 			inheritedRL::AttachRocket(id, this);
-			xr_vector<shared_str>::iterator it = std::find(m_pendingRockets.begin(), m_pendingRockets.end(), getCurrentRocket()->cNameSect());
+			typename xr_vector<shared_str>::iterator it = std::find(m_pendingRockets.begin(), m_pendingRockets.end(), getCurrentRocket()->cNameSect());
 			if (it != m_pendingRockets.end())
 				m_pendingRockets.erase(it);
 		}
@@ -101,7 +101,7 @@ void CWeaponSSRS::OnEvent(NET_Packet& P, u16 type)
 			bool bLaunch = (type == GE_LAUNCH_ROCKET);
 			P.r_u16(id);
 			// a stripped rocket already left m_rockets, detach it here so its destroy can land
-			xr_vector<u16>::iterator it = std::find(m_strippedRockets.begin(), m_strippedRockets.end(), id);
+			typename xr_vector<u16>::iterator it = std::find(m_strippedRockets.begin(), m_strippedRockets.end(), id);
 			if (it != m_strippedRockets.end())
 			{
 				m_strippedRockets.erase(it);
@@ -191,7 +191,7 @@ void CWeaponSSRS::ReloadMagazine()
 	m_needReload = false;
 	m_BriefInfo_CalcFrame = 0;
 
-	//устранить осечку при перезарядке
+	//????????? ?????? ??? ???????????
 	if (IsMisfire())
 	{
 		bMisfire = false;
@@ -225,14 +225,14 @@ void CWeaponSSRS::ReloadMagazine()
 		if (!tmp_sect_name)
 			return;
 
-		//попытаться найти в инвентаре патроны текущего типа
+		//?????????? ????? ? ????????? ??????? ???????? ????
 		m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(tmp_sect_name));
 
 		if (!m_pCurrentAmmo && !m_bLockType && iAmmoElapsed == 0)
 		{
 			for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i)
 			{
-				//проверить патроны всех подходящих типов
+				//????????? ??????? ???? ?????????? ?????
 				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
 
 				if (m_pCurrentAmmo)
@@ -244,10 +244,10 @@ void CWeaponSSRS::ReloadMagazine()
 		}
 	}
 
-	//нет патронов для перезарядки
+	//??? ???????? ??? ???????????
 	if (!m_pCurrentAmmo && !unlimited_ammo()) return;
 
-	//разрядить магазин, если загружаем патронами другого типа
+	//????????? ???????, ???? ????????? ????????? ??????? ????
 	if (!m_bLockType && !m_magazine.empty() &&
 		(!m_pCurrentAmmo || xr_strcmp(m_pCurrentAmmo->cNameSect(),
 			*m_magazine.back().m_ammoSect)))
@@ -272,7 +272,7 @@ void CWeaponSSRS::ReloadMagazine()
 
 	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 
-	//выкинуть коробку патронов, если она пустая
+	//???????? ??????? ????????, ???? ??? ??????
 	if (m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr && OnServer())
 		m_pCurrentAmmo->SetDropManual(TRUE);
 

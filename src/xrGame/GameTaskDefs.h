@@ -1,7 +1,7 @@
 #pragma once
 #include "alife_abstract_registry.h"
 
-enum ETaskState
+enum ETaskState XR_FWD_ENUM_INT
 {
 	eTaskStateFail = 0,
 	eTaskStateInProgress,

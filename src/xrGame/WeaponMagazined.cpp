@@ -428,7 +428,7 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 	while (!m_magazine.empty())
 	{
 		CCartridge& l_cartridge = m_magazine.back();
-		xr_map<LPCSTR, u16>::iterator l_it;
+		typename xr_map<LPCSTR, u16>::iterator l_it;
 		for (l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it)
 		{
 			if (!xr_strcmp(*l_cartridge.m_ammoSect, l_it->first))
@@ -456,7 +456,7 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 	if (!spawn_ammo)
 		return;
 
-	xr_map<LPCSTR, u16>::iterator l_it;
+	typename xr_map<LPCSTR, u16>::iterator l_it;
 	for (l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it)
 	{
 		if (m_pInventory)

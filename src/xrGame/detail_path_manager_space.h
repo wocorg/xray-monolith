@@ -10,7 +10,7 @@
 
 namespace DetailPathManager
 {
-	enum EDetailPathType
+	enum EDetailPathType XR_FWD_ENUM_INT
 	{
 		eDetailPathTypeSmooth,
 		eDetailPathTypeSmoothDodge,

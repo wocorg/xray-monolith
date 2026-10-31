@@ -13,7 +13,7 @@
 
 namespace SightManager
 {
-	enum ESightType;
+	enum ESightType XR_FWD_ENUM_U32;
 };
 
 class CScriptGameObject;

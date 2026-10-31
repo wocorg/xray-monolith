@@ -235,7 +235,7 @@ void CUIMpTradeWnd::UpdateHelperItems()
 
 void CUIMpTradeWnd::CreateHelperItems(xr_vector<shared_str>& ammo_types)
 {
-	for (xr_vector<shared_str>::iterator it = ammo_types.begin();
+	for (typename xr_vector<shared_str>::iterator it = ammo_types.begin();
 	     it != ammo_types.end();
 	     ++it)
 	{
@@ -253,7 +253,7 @@ void CUIMpTradeWnd::CreateHelperItems(xr_vector<shared_str>& ammo_types)
 
 void CUIMpTradeWnd::CreateHelperItems(CUIDragDropListEx* list, const CStoreHierarchy::item* shop_level)
 {
-	for (xr_vector<shared_str>::const_iterator
+	for (typename xr_vector<shared_str>::const_iterator
 	     it = shop_level->m_items_in_group.begin();
 	     it != shop_level->m_items_in_group.end();
 	     ++it)
@@ -380,7 +380,7 @@ void CUIMpTradeWnd::UpdateCorrespondingItemsForList(CUIDragDropListEx* _list)
 
 	while (!_tmp_list.empty())
 	{
-		xr_list<SBuyItemInfo*>::iterator _curr = _tmp_list.begin();
+		typename xr_list<SBuyItemInfo*>::iterator _curr = _tmp_list.begin();
 		SBuyItemInfo* bi = *(_curr);
 
 		CUIDragDropListEx* _owner_list = bi->m_cell_item->OwnerList();
@@ -412,7 +412,7 @@ void CUIMpTradeWnd::UpdateCorrespondingItemsForList(CUIDragDropListEx* _list)
 			//sell 
 			SBuyItemInfo* res_info = NULL;
 			TryToSellItem(bi, true, res_info);
-			xr_list<SBuyItemInfo*>::iterator tmp_it = find(_tmp_list.begin(), _tmp_list.end(), res_info);
+			typename xr_list<SBuyItemInfo*>::iterator tmp_it = find(_tmp_list.begin(), _tmp_list.end(), res_info);
 			VERIFY(tmp_it!=_tmp_list.end());
 			_tmp_list.erase(tmp_it);
 		}

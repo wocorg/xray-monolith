@@ -18,7 +18,7 @@ class CPropertyStorage;
 
 namespace StalkerDecisionSpace
 {
-	enum EWorldProperties;
+	enum EWorldProperties XR_FWD_ENUM_U32;
 }
 
 namespace smart_cover

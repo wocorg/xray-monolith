@@ -86,7 +86,7 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 
 void CUIInventoryCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
 {
-	for (xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
+	for (typename xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
 	{
 		(*it)->m_icon = InitLayer((*it)->m_icon, (*it)->m_name, (*it)->offset, parent_list->GetVerticalPlacement(),
 		                          (*it)->m_scale);
@@ -146,7 +146,7 @@ CUIDragItem* CUIInventoryCellItem::CreateDragItem()
 	CUIDragItem* i = inherited::CreateDragItem();
 	CUIStatic* s = NULL;
 
-	for (xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
+	for (typename xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
 	{
 		s = xr_new<CUIStatic>();
 		s->SetAutoDelete(true);
@@ -170,7 +170,7 @@ CUIDragItem* CUIInventoryCellItem::CreateDragItem()
 void CUIInventoryCellItem::SetTextureColor(u32 color)
 {
 	inherited::SetTextureColor(color);
-	for (xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
+	for (typename xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
 	{
 		if ((*it)->m_icon)
 			(*it)->m_icon->SetTextureColor(color);
@@ -193,7 +193,7 @@ void CUIInventoryCellItem::RemoveLayer(SIconLayer* layer)
 	if (m_layers.empty())
 		return;
 
-	for (xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
+	for (typename xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
 	{
 		if ((*it) == layer)
 		{
@@ -311,7 +311,7 @@ void CUIInventoryCellItem::Update()
 
 	SetTextureColor(color);
 
-	for (xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
+	for (typename xr_vector<SIconLayer*>::iterator it = m_layers.begin(); m_layers.end() != it; ++it)
 	{
 		(*it)->m_icon = InitLayer((*it)->m_icon, (*it)->m_name, (*it)->offset, Heading(), (*it)->m_scale);
 		(*it)->m_icon->SetTextureColor(color);
@@ -365,8 +365,8 @@ CUIDragItem* CUIAmmoCellItem::CreateDragItem()
 
 u32 CUIAmmoCellItem::CalculateAmmoCount()
 {
-	xr_vector<CUICellItem*>::iterator it = m_childs.begin();
-	xr_vector<CUICellItem*>::iterator it_e = m_childs.end();
+	typename xr_vector<CUICellItem*>::iterator it = m_childs.begin();
+	typename xr_vector<CUICellItem*>::iterator it_e = m_childs.end();
 
 	u32 total = IsHelper() ? 0 : object()->m_boxCurr;
 	for (; it != it_e; ++it)

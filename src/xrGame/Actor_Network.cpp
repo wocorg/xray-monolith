@@ -1337,9 +1337,9 @@ void		CActor::UpdatePosStack	( u32 Time0, u32 Time1 )
 
 	if (!SMemoryPosStack.empty() && SMemoryPosStack.back().u64WorldStep >= ph_world->m_steps_num)
 	{
-		xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
-		xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
-		xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,u64(ph_world->m_steps_num-1));
+		typename xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
+		typename xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
+		typename xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,u64(ph_world->m_steps_num-1));
 		if (I != E) 
 		{
 			I->SState = State;
@@ -1359,9 +1359,9 @@ ACTOR_DEFS::SMemoryPos*				CActor::FindMemoryPos (u32 Time)
 
 	if (Time > SMemoryPosStack.back().dwTime1) return NULL;
 	
-	xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
-	xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
-	xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,Time);
+	typename xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
+	typename xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
+	typename xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,Time);
 
 	if (I==E) return NULL;
 

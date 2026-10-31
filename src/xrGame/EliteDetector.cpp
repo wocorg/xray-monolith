@@ -163,8 +163,8 @@ void CUIArtefactDetectorElite::Draw()
 
 	UI().ScreenFrustumLIT().CreateFromRect(Frect().set(rp.x, rp.y, wrk_sz.x, wrk_sz.y));
 
-	xr_vector<SDrawOneItem>::const_iterator it = m_items_to_draw.begin();
-	xr_vector<SDrawOneItem>::const_iterator it_e = m_items_to_draw.end();
+	typename xr_vector<SDrawOneItem>::const_iterator it = m_items_to_draw.begin();
+	typename xr_vector<SDrawOneItem>::const_iterator it_e = m_items_to_draw.end();
 	for (; it != it_e; ++it)
 	{
 		Fvector p = (*it).pos;
@@ -210,7 +210,7 @@ void CUIArtefactDetectorElite::Clear()
 
 void CUIArtefactDetectorElite::RegisterItemToDraw(const Fvector& p, const shared_str& palette_idx)
 {
-	xr_map<shared_str, CUIStatic*>::iterator it = m_palette.find(palette_idx);
+	typename xr_map<shared_str, CUIStatic*>::iterator it = m_palette.find(palette_idx);
 	if (it == m_palette.end())
 	{
 		Msg("! RegisterItemToDraw. static not found for [%s]", palette_idx.c_str());
