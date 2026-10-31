@@ -33,4 +33,11 @@ endif()
 
 add_compile_definitions(NDEBUG PURE_ALLOC)
 
+# LuaJIT 2.1 (Homebrew): 2.0.4 vendored in src/3rd party/luajit-2 has no arm64 support
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LUAJIT REQUIRED IMPORTED_TARGET luajit)
+
 add_subdirectory(src/xrCore)
+add_subdirectory("src/3rd party/luabind")
+add_subdirectory("src/3rd party/ode")
+add_subdirectory(src/xrCDB)
