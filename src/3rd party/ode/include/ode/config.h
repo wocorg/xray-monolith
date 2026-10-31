@@ -43,6 +43,11 @@ extern "C" {
 
 #include <malloc.h>		// for alloca under windows
 
+#ifndef _MSC_VER
+#include <alloca.h>
+#define _copysign copysign
+#endif
+
 #include <string.h>
 
 #include <math.h>

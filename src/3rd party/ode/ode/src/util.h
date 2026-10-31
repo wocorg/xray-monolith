@@ -37,6 +37,15 @@ typedef void (*dstepper_fn_t) (dxWorld *world, dxBody * const *body, int nb,
 
 void dxProcessIslands (dxWorld *world, dReal stepsize, dstepper_fn_t stepper);
 
+#ifndef _MSC_VER
+#include <cmath>
+// NaN, infinities and denormals are invalid (same classes as the _fpclass check below)
+inline bool		dValid	(const float x)
+{
+	double d = double(x);
+	return std::isfinite(d) && std::fpclassify(d) != FP_SUBNORMAL;
+}
+#else
 inline bool		dValid	(const float x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
@@ -48,8 +57,9 @@ inline bool		dValid	(const float x)
 	_FPCLASS_NN Negative normalized non-zero 
 	_FPCLASS_NZ Negative zero ( – 0) 
 	_FPCLASS_PZ Positive 0 (+0) 
-	_FPCLASS_PN Positive normalized non-zero 
+	_FPCLASS_PN Positive normalized non-zero
 	*/
 	return		true;
 }
+#endif
 #endif

@@ -26,7 +26,8 @@
 
 #include <typeinfo>
 #ifndef _MSC_VER
-// MSVC also declares type_info in the global namespace; luabind relies on that std::type_info;
+// MSVC also declares type_info in the global namespace; luabind relies on that
+using std::type_info;
 #endif
 
 #ifndef LUA_DEBUG
