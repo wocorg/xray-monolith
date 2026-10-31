@@ -24,6 +24,11 @@
 
 #define LUABIND_DONT_COPY_STRINGS
 
+#include <typeinfo>
+#ifndef _MSC_VER
+// MSVC also declares type_info in the global namespace; luabind relies on that std::type_info;
+#endif
+
 #ifndef LUA_DEBUG
 
 #	ifndef LUABIND_NO_ERROR_CHECKING

@@ -23,7 +23,12 @@
 #pragma once
 extern "C"
 {
+#ifdef _MSC_VER
 #	include <luajit-2/src/lua.h>
+#else
+// the LuaJIT in use (2.1 on macOS) provides lua.h; the vendored 2.0 headers must not mix with it
+#	include <lua.h>
+#endif
 }
 
 #include <luabind/config.hpp>
@@ -32,7 +37,9 @@ extern "C"
 namespace luabind::detail
 {
 	// this class represents a specific overload of a member-function.
+#ifdef _MSC_VER
     template class LUABIND_API std::function<int(lua_State*)>;
+#endif
 
 	struct LUABIND_API overload_rep_base
 	{

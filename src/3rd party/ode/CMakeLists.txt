@@ -36,4 +36,6 @@ add_library(ode STATIC
 )
 
 target_include_directories(ode PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# ode/config.h includes <malloc.h>; use the xrCore stand-in on macOS
+target_include_directories(ode SYSTEM PUBLIC ${XRAY_SRC_DIR}/xrCore/posix_include)
 target_compile_definitions(ode PUBLIC dSINGLE PRIVATE dNODEBUG)
