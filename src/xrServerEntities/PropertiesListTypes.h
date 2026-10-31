@@ -564,6 +564,10 @@ typedef CustomValue<Fcolor> ColorValue;
 template <class T>
 class NumericValue : public CustomValue<T>
 {
+protected:
+	using CustomValue<T>::value;
+	using CustomValue<T>::init_value;
+
 public:
 	T lim_mn;
 	T lim_mx;
